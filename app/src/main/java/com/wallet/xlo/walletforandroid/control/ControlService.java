@@ -20,10 +20,12 @@ public class ControlService extends Service implements SendAble {
     @Override
     public void onCreate() {
         super.onCreate();
-        bindService(new Intent(this, NetWorkService.class), new ServiceConnection() {
+        Intent service = new Intent(this, NetWorkService.class);
+        bindService(service, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 netWorkBinder = (NetWorkService.NetWorkBinder) service;
+                netWorkBinder.startConnect("192.168.1.123", 9090);
                 startListenNet();
             }
 

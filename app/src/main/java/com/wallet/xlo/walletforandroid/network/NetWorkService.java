@@ -30,17 +30,15 @@ public class NetWorkService extends Service implements DisConnectAble {
                 netWorkWriteThread.disConnect();
             }
         });
+        isConnect = false;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        isConnect = false;
+    public void startConnect(final String ip, final int port) {
         Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
-                    Socket socket = new Socket("192.168.1.123", 9090);
+                    Socket socket = new Socket(ip, port);
                     isConnect = true;
                     netWorkWriteThread = new NetWorkWriteThread(socket, NetWorkService.this);
                     netWorkReadThread = new NetWorkReadThread(socket, NetWorkService.this);
@@ -79,6 +77,18 @@ public class NetWorkService extends Service implements DisConnectAble {
     }
 
     public class NetWorkBinder extends Binder implements SendAble, GetAble {
+
+        public boolean isConnect() {
+            return isConnect;
+        }
+
+        public void startConnect(String ip, int port) {
+            NetWorkService.this.startConnect(ip, port);
+        }
+
+        public void stopNetWork() {
+            NetWorkService.this.stopSelf();
+        }
 
         public void whenConnect(WhenDisConnectAction whenDisConnectAction) {
             whenDisConnectActions.add(whenDisConnectAction);
