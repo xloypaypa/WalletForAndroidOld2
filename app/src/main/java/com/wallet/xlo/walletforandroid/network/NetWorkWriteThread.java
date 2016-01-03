@@ -1,7 +1,5 @@
 package com.wallet.xlo.walletforandroid.network;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -13,14 +11,16 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by xlo on 16-1-3.
  * it's the net work thread
  */
-public class NetWorkWriteThread extends Thread {
+public class NetWorkWriteThread extends Thread implements SendAble, DisConnectAble {
 
     private OutputStream outputStream;
     private volatile Queue<byte[]> queue;
+    private NetWorkService netWorkService;
 
-    public NetWorkWriteThread(Socket socket) throws IOException {
+    public NetWorkWriteThread(Socket socket, NetWorkService netWorkService) throws IOException {
         this.outputStream = socket.getOutputStream();
         this.queue = new LinkedBlockingQueue<>();
+        this.netWorkService = netWorkService;
     }
 
     @Override
@@ -29,6 +29,9 @@ public class NetWorkWriteThread extends Thread {
             try {
                 Thread.sleep(Long.MAX_VALUE);
             } catch (InterruptedException e) {
+                if (this.queue.isEmpty()) {
+                    break;
+                }
                 try {
                     sendMessage();
                 } catch (IOException e1) {
@@ -36,7 +39,7 @@ public class NetWorkWriteThread extends Thread {
                 }
             }
         }
-        Log.e("net", "error");
+        this.netWorkService.disConnect();
     }
 
     private void sendMessage() throws IOException {
@@ -53,7 +56,8 @@ public class NetWorkWriteThread extends Thread {
         }
     }
 
-    public void addMessage(String command, byte[] message) {
+    @Override
+    public void sendMessage(String command, byte[] message) {
         byte[] all = buildPackage(command, message);
         synchronized (NetWorkWriteThread.class) {
             queue.add(all);
@@ -73,4 +77,8 @@ public class NetWorkWriteThread extends Thread {
         return all;
     }
 
+    @Override
+    public void disConnect() {
+        this.interrupt();
+    }
 }

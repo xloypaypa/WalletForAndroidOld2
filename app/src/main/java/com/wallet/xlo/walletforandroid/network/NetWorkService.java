@@ -2,42 +2,101 @@ package com.wallet.xlo.walletforandroid.network;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 
-public class NetWorkService extends Service {
+public class NetWorkService extends Service implements DisConnectAble {
     private NetWorkReadThread netWorkReadThread;
     private NetWorkWriteThread netWorkWriteThread;
+    private Set<WhenDisConnectAction> whenDisConnectActions;
+    private volatile boolean isConnect;
 
     public NetWorkService() {
+        this.whenDisConnectActions = new HashSet<>();
+        this.whenDisConnectActions.add(new WhenDisConnectAction() {
+            @Override
+            public void action() {
+                netWorkReadThread.disConnect();
+            }
+        });
+        this.whenDisConnectActions.add(new WhenDisConnectAction() {
+            @Override
+            public void action() {
+                netWorkWriteThread.disConnect();
+            }
+        });
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        new Thread(){
+        isConnect = false;
+        Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
                     Socket socket = new Socket("192.168.1.123", 9090);
-                    netWorkWriteThread = new NetWorkWriteThread(socket);
-                    netWorkReadThread = new NetWorkReadThread(socket);
+                    isConnect = true;
+                    netWorkWriteThread = new NetWorkWriteThread(socket, NetWorkService.this);
+                    netWorkReadThread = new NetWorkReadThread(socket, NetWorkService.this);
                     netWorkWriteThread.start();
                     netWorkReadThread.start();
-                    netWorkWriteThread.addMessage("/session", "{}".getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }.start();
+        };
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isConnect() {
+        return isConnect;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("net work", "bind");
-        return null;
+        return new NetWorkBinder();
+    }
+
+    @Override
+    public synchronized void disConnect() {
+        if (isConnect()) {
+            isConnect = false;
+            for (WhenDisConnectAction now : whenDisConnectActions) {
+                now.action();
+            }
+        }
+    }
+
+    public class NetWorkBinder extends Binder implements SendAble, GetAble {
+
+        public void whenConnect(WhenDisConnectAction whenDisConnectAction) {
+            whenDisConnectActions.add(whenDisConnectAction);
+        }
+
+        @Override
+        public void setGetCallBack(CallBack callBack) {
+            netWorkReadThread.setGetCallBack(callBack);
+        }
+
+        @Override
+        public void sendMessage(String command, byte[] message) {
+            netWorkWriteThread.sendMessage(command, message);
+        }
+
+    }
+
+    public interface WhenDisConnectAction {
+        void action();
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.wallet.xlo.walletforandroid.control.ControlService;
 import com.wallet.xlo.walletforandroid.network.NetWorkService;
 
 public class ConnectingActivity extends AppCompatActivity {
@@ -20,7 +21,7 @@ public class ConnectingActivity extends AppCompatActivity {
         this.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(ConnectingActivity.this, NetWorkService.class));
+                startService(new Intent(ConnectingActivity.this, ControlService.class));
             }
         });
     }

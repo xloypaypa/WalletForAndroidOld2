@@ -1,7 +1,5 @@
 package com.wallet.xlo.walletforandroid.network;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -13,17 +11,20 @@ import java.util.List;
  * Created by xlo on 16-1-3.
  * it's the network read thread
  */
-public class NetWorkReadThread extends Thread {
+public class NetWorkReadThread extends Thread implements GetAble, DisConnectAble {
 
     private int status, len;
     private InputStream inputStream;
     private List<Byte> body, head;
+    private NetWorkService netWorkService;
+    private CallBack callBack;
 
-    public NetWorkReadThread(Socket socket) throws IOException {
+    public NetWorkReadThread(Socket socket, NetWorkService netWorkService) throws IOException {
         this.inputStream = socket.getInputStream();
         this.head = new LinkedList<>();
         this.body = new LinkedList<>();
         this.status = 0;
+        this.netWorkService = netWorkService;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class NetWorkReadThread extends Thread {
                 break;
             }
         }
-        Log.e("net", "error");
+        this.netWorkService.disConnect();
     }
 
     private void nextByte(byte now) {
@@ -73,7 +74,16 @@ public class NetWorkReadThread extends Thread {
     }
 
     private void solvePackage(byte[] message) {
-        Log.i("get", new String(message));
+        this.callBack.action(message);
     }
 
+    @Override
+    public void setGetCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    @Override
+    public void disConnect() {
+
+    }
 }
