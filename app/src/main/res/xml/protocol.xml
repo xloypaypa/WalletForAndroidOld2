@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<command>
+    <solver name="session" url="/session" manager="control.SessionLogic">
+        <method name="getSessionID">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="register" url="/register" manager="control.UserLogic">
+        <method name="register">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="login" url="/login" manager="control.UserLogic">
+        <method name="login">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="key" url="/key" manager="control.SessionLogic">
+        <method name="key" type="data"/>
+    </solver>
+
+    <solver name="get money" url="/getMoney" manager="control.MoneyLogic">
+        <method name="getMoney" type="array">
+            <data>typename</data>
+            <data>value</data>
+        </method>
+    </solver>
+    <solver name="create money" url="/createMoney" manager="control.MoneyLogic">
+        <method name="updateMoney">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="remove money" url="/removeMoney" manager="control.MoneyLogic">
+        <method name="updateMoney">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="transfer money" url="/transferMoney" manager="control.MoneyLogic">
+        <method name="updateMoney">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="rename money" url="/renameMoney" manager="control.MoneyLogic">
+        <method name="updateMoney">
+            <data>result</data>
+        </method>
+    </solver>
+
+    <solver name="get budget" url="/getBudget" manager="control.BudgetLogic">
+        <method name="getBudget" type="array">
+            <data>typename</data>
+            <data>income</data>
+            <data>expenditure</data>
+            <data>now income</data>
+            <data>now expenditure</data>
+        </method>
+    </solver>
+    <solver name="create budget" url="/createBudget" manager="control.BudgetLogic">
+        <method name="updateBudget">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="remove budget" url="/removeBudget" manager="control.BudgetLogic">
+        <method name="updateBudget">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="change budge" url="/changeBudget" manager="control.BudgetLogic">
+        <method name="updateBudget">
+            <data>result</data>
+        </method>
+    </solver>
+
+    <solver name="add edge" url="/addEdge" manager="control.EdgeLogic">
+        <method name="updateEdge">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="remove edge" url="/removeEdge" manager="control.EdgeLogic">
+        <method name="updateEdge">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="update edge" url="/updateEdge" manager="control.EdgeLogic">
+        <method name="updateEdge">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="get edge list" url="/getEdgeList" manager="control.EdgeLogic">
+        <method name="getEdgeList" type="array">
+            <data>from</data>
+            <data>to</data>
+            <data>script</data>
+        </method>
+    </solver>
+
+    <solver name="income" url="/income" manager="control.UseMoneyLogic">
+        <method name="update">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="expenditure" url="/expenditure" manager="control.UseMoneyLogic">
+        <method name="update">
+            <data>result</data>
+        </method>
+    </solver>
+
+    <solver name="get money detail" url="/getMoneyDetail" manager="control.DetailLogic">
+        <method name="getMoneyDetail" type="array">
+            <data>moneyType</data>
+            <data>value</data>
+            <data>date</data>
+        </method>
+    </solver>
+    <solver name="get all detail" url="/getAllDetail" manager="control.DetailLogic">
+        <method name="getAllDetail" type="array">
+            <data>id</data>
+            <data>event</data>
+            <data>date</data>
+        </method>
+    </solver>
+    <solver name="get detail detail" url="/getDetailDetail" manager="control.DetailLogic">
+        <method name="getDetailDetail">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="roll back" url="/rollBack" manager="control.DetailLogic">
+        <method name="rollBack"/>
+    </solver>
+</command>

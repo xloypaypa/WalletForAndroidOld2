@@ -15,6 +15,7 @@ public class NetWorkService extends Service implements DisConnectAble {
     private NetWorkWriteThread netWorkWriteThread;
     private Set<WhenDisConnectAction> whenDisConnectActions;
     private volatile boolean isConnect;
+    private Socket socket;
 
     public NetWorkService() {
         this.whenDisConnectActions = new HashSet<>();
@@ -38,7 +39,7 @@ public class NetWorkService extends Service implements DisConnectAble {
             @Override
             public void run() {
                 try {
-                    Socket socket = new Socket(ip, port);
+                    socket = new Socket(ip, port);
                     isConnect = true;
                     netWorkWriteThread = new NetWorkWriteThread(socket, NetWorkService.this);
                     netWorkReadThread = new NetWorkReadThread(socket, NetWorkService.this);
@@ -77,6 +78,10 @@ public class NetWorkService extends Service implements DisConnectAble {
     }
 
     public class NetWorkBinder extends Binder implements SendAble, GetAble {
+
+        public Socket getSocket() {
+            return socket;
+        }
 
         public boolean isConnect() {
             return isConnect;

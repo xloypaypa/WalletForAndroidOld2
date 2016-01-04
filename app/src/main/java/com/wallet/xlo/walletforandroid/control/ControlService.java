@@ -6,9 +6,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.wallet.xlo.walletforandroid.R;
+import com.wallet.xlo.walletforandroid.model.config.ProtocolConfig;
 import com.wallet.xlo.walletforandroid.network.GetAble;
 import com.wallet.xlo.walletforandroid.network.NetWorkService;
 import com.wallet.xlo.walletforandroid.network.SendAble;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 public class ControlService extends Service implements SendAble {
 
@@ -20,12 +26,21 @@ public class ControlService extends Service implements SendAble {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        try {
+            ProtocolConfig.getProtocolConfig()
+                    .loadConfig(ControlService.this.getResources().getXml(R.xml.protocol));
+        } catch (IOException | XmlPullParserException e) {
+            e.printStackTrace();
+        }
+
+
         Intent service = new Intent(this, NetWorkService.class);
         bindService(service, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 netWorkBinder = (NetWorkService.NetWorkBinder) service;
-                netWorkBinder.startConnect("192.168.1.123", 9090);
+                netWorkBinder.startConnect("192.168.31.198", 9090);
                 startListenNet();
             }
 
@@ -46,7 +61,7 @@ public class ControlService extends Service implements SendAble {
         netWorkBinder.setGetCallBack(new GetAble.CallBack() {
             @Override
             public void action(byte[] message) {
-                System.out.println(new String(message));
+                solveMessage(message);
             }
         });
         sendMessage("/session", "{}".getBytes());
@@ -60,6 +75,25 @@ public class ControlService extends Service implements SendAble {
     @Override
     public void sendMessage(String command, byte[] message) {
         netWorkBinder.sendMessage(command, message);
+    }
+
+    private void solveMessage(byte[] body) {
+        byte[] url, message;
+        for (int i = 0; i < body.length; i++) {
+            if (body[i] == '#') {
+                url = new byte[i];
+                System.arraycopy(body, 0, url, 0, i);
+                message = new byte[body.length - i - 1];
+                System.arraycopy(body, i + 1, message, 0, body.length - i - 1);
+                try {
+                    NetMessageSolver.getNetMessageSolver()
+                            .sendEvent(new String(url), message, netWorkBinder.getSocket());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
     }
 
 }
