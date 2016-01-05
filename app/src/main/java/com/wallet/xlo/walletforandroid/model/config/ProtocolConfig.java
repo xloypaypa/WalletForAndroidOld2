@@ -2,6 +2,8 @@ package com.wallet.xlo.walletforandroid.model.config;
 
 import android.content.res.XmlResourceParser;
 
+import com.wallet.xlo.walletforandroid.control.ControlService;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -89,7 +91,7 @@ public class ProtocolConfig {
 
     public Constructor<?> getManagerConstructor(String className) throws ClassNotFoundException, NoSuchMethodException {
         if (!this.manager.containsKey(className)) {
-            Class[] paramTypes = {Socket.class};
+            Class[] paramTypes = {ControlService.class};
             this.manager.put(className, Class.forName(className).getConstructor(paramTypes));
         }
         return this.manager.get(className);

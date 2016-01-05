@@ -1,9 +1,12 @@
 package control;
 
+import com.wallet.xlo.walletforandroid.control.Client;
 import com.wallet.xlo.walletforandroid.control.ControlService;
 import com.wallet.xlo.walletforandroid.model.config.EncryptionConfig;
 
 import net.ProtocolSendAble;
+
+import model.tool.RSA;
 
 /**
  * Created by xlo on 2015/11/4.
@@ -17,18 +20,19 @@ public class SessionLogic extends ProtocolSendAble {
 
     public void getSessionID(String id) {
         //TODO
-//        Client.getClient().setSessionID(id);
+        Client.getClient().setSessionID(id);
 //        Main.startFrame(Login.class);
     }
 
     public void key(byte[] data) {
-//        Client.getClient().setServerKey(RSA.bytes2PublicKey(data));
+        Client.getClient().setServerKey(RSA.bytes2PublicKey(data));
         getSessionID();
     }
 
     public void clientKey() {
-//        this.packageServer.addMessage("/key", RSA.publicKey2Bytes(EncryptionConfig.getConfig().getKeyPair().getPublic()));
-//        Client.getClient().setEncryption(true);
+        this.controlService.sendMessage("/key",
+                RSA.publicKey2Bytes(EncryptionConfig.getEncryptionConfig().getKeyPair().getPublic()));
+        Client.getClient().setEncryption(true);
     }
 
     public void getSessionID() {

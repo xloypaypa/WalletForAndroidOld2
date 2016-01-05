@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WalletForAndroid</string>
+    <string name="ip">ip</string>
+    <string name="port">port</string>
+    <string name="encrypt">encrypt</string>
+    <string name="isEncrypt">is encrypt</string>
+    <string name="connect">connect</string>
 </resources>

@@ -12,14 +12,6 @@ public class EncryptionConfig {
 
     private static volatile EncryptionConfig encryptionConfig;
 
-    private EncryptionConfig() {
-        try {
-            init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static EncryptionConfig getEncryptionConfig() {
         if (encryptionConfig == null) {
             synchronized (EncryptionConfig.class) {
@@ -31,12 +23,24 @@ public class EncryptionConfig {
         return encryptionConfig;
     }
 
+    private EncryptionConfig() {
+        try {
+            init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     protected boolean encryption;
     protected KeyPair keyPair;
 
     public void init() throws Exception {
         RSA.keySize = 1024;
         this.keyPair = RSA.buildKeyPair();
+    }
+
+    public void setEncryption(boolean encryption) {
+        this.encryption = encryption;
     }
 
     public boolean isEncryption() {

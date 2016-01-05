@@ -10,63 +10,57 @@ public class RSA {
     public static int keySize = 1024;
 
     public static KeyPair buildKeyPair() throws Exception {
-        return null;
-//        try {
-//            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
-//                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
-//            keyPairGen.initialize(keySize, new SecureRandom());
-//            return keyPairGen.generateKeyPair();
-//        } catch (Exception e) {
-//            throw new Exception(e.getMessage());
-//        }
+        try {
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+            keyPairGen.initialize(keySize, new SecureRandom());
+            return keyPairGen.generateKeyPair();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     public static byte[] encrypt(PublicKey pk, byte[] data) throws Exception {
-        return null;
-//        try {
-//            Cipher cipher = Cipher.getInstance("RSA",
-//                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
-//            cipher.init(Cipher.ENCRYPT_MODE, pk);
-//            int blockSize = cipher.getBlockSize();
-//            int outputSize = cipher.getOutputSize(data.length);
-//            int leavedSize = data.length % blockSize;
-//            int blocksSize = leavedSize != 0 ? data.length / blockSize + 1
-//                    : data.length / blockSize;
-//            byte[] raw = new byte[outputSize * blocksSize];
-//            int i = 0;
-//            while (data.length - i * blockSize > 0) {
-//                if (data.length - i * blockSize > blockSize)
-//                    cipher.doFinal(data, i * blockSize, blockSize, raw, i
-//                            * outputSize);
-//                else
-//                    cipher.doFinal(data, i * blockSize, data.length - i
-//                            * blockSize, raw, i * outputSize);
-//                i++;
-//            }
-//            return raw;
-//        } catch (Exception e) {
-//            throw new Exception(e.getMessage());
-//        }
+        try {
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, pk);
+            int blockSize = cipher.getBlockSize();
+            int outputSize = cipher.getOutputSize(data.length);
+            int leavedSize = data.length % blockSize;
+            int blocksSize = leavedSize != 0 ? data.length / blockSize + 1
+                    : data.length / blockSize;
+            byte[] raw = new byte[outputSize * blocksSize];
+            int i = 0;
+            while (data.length - i * blockSize > 0) {
+                if (data.length - i * blockSize > blockSize)
+                    cipher.doFinal(data, i * blockSize, blockSize, raw, i
+                            * outputSize);
+                else
+                    cipher.doFinal(data, i * blockSize, data.length - i
+                            * blockSize, raw, i * outputSize);
+                i++;
+            }
+            return raw;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
-        return  null;
-//        try {
-//            Cipher cipher = Cipher.getInstance("RSA",
-//                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
-//            cipher.init(Cipher.DECRYPT_MODE, pk);
-//            int blockSize = cipher.getBlockSize();
-//            ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
-//            int j = 0;
-//
-//            while (raw.length - j * blockSize > 0) {
-//                bout.write(cipher.doFinal(raw, j * blockSize, blockSize));
-//                j++;
-//            }
-//            return bout.toByteArray();
-//        } catch (Exception e) {
-//            throw new Exception(e.getMessage());
-//        }
+        try {
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, pk);
+            int blockSize = cipher.getBlockSize();
+            ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
+            int j = 0;
+
+            while (raw.length - j * blockSize > 0) {
+                bout.write(cipher.doFinal(raw, j * blockSize, blockSize));
+                j++;
+            }
+            return bout.toByteArray();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     public static byte[] publicKey2Bytes(PublicKey publicKey) {

@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,11 +33,11 @@ public class NetMessageSolver {
         return netMessageSolver;
     }
 
-    public void sendEvent(String command, byte[] message, Socket socket) throws Exception {
+    public void sendEvent(String command, byte[] message, ControlService controlService) throws Exception {
         ProtocolConfig config = ProtocolConfig.getProtocolConfig();
         ProtocolConfig.PostInfo postInfo = config.findPostInfo(command);
 
-        Object manager = buildManager(config, postInfo, socket);
+        Object manager = buildManager(config, postInfo, controlService);
         Method method = getMethod(config, postInfo);
         Object[] data = getData(postInfo, message);
         method.invoke(manager, data);
@@ -90,9 +89,9 @@ public class NetMessageSolver {
         }
     }
 
-    private Object buildManager(ProtocolConfig config, ProtocolConfig.PostInfo postInfo, Socket socket) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private Object buildManager(ProtocolConfig config, ProtocolConfig.PostInfo postInfo, ControlService controlService) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Constructor<?> constructor = config.getManagerConstructor(postInfo.getManager());
-        return constructor.newInstance(socket);
+        return constructor.newInstance(controlService);
     }
 
 
