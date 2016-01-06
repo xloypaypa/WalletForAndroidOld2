@@ -34,8 +34,6 @@ public class NetMessageSolver {
     }
 
     public void sendEvent(String command, byte[] message, ControlService controlService) throws Exception {
-        System.out.println("get " + command + " " + new String(message));
-
         ProtocolConfig config = ProtocolConfig.getProtocolConfig();
         ProtocolConfig.PostInfo postInfo = config.findPostInfo(command);
 

@@ -1,6 +1,8 @@
 package control;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 
 import com.wallet.xlo.walletforandroid.control.ControlService;
@@ -25,8 +27,12 @@ public class UserLogic extends ProtocolSender {
 //            JOptionPane.showMessageDialog(null, "login successfully", "info", JOptionPane.INFORMATION_MESSAGE);
 //            Main.startFrame(Money.class);
         } else {
-            System.out.println("fail");
-//            DialogBuilder.showMessageDialog("fail", "login fail", controlService.getActivity());
+            Bundle bundle = new Bundle();
+            bundle.putString("title", "error");
+            bundle.putString("message", "server refuse");
+            Message message = new Message();
+            message.setData(bundle);
+            controlService.getActivity().dialogHandler.sendMessage(message);
         }
     }
 
@@ -34,8 +40,12 @@ public class UserLogic extends ProtocolSender {
         if (result.equals("ok")) {
             controlService.finishNowActivity();
         } else {
-            System.out.println("fail");
-//            DialogBuilder.showMessageDialog("fail", "register fail", controlService.getActivity());
+            Bundle bundle = new Bundle();
+            bundle.putString("title", "error");
+            bundle.putString("message", "server refuse");
+            Message message = new Message();
+            message.setData(bundle);
+            controlService.getActivity().dialogHandler.sendMessage(message);
         }
     }
 }

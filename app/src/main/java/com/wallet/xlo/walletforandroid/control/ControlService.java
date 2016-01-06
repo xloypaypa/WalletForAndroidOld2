@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.wallet.xlo.walletforandroid.AbstractActivity;
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.model.config.ProtocolConfig;
 import com.wallet.xlo.walletforandroid.network.GetAble;
@@ -27,7 +28,7 @@ public class ControlService extends Service implements SendAble {
 
     private NetWorkService.NetWorkBinder netWorkBinder;
     private ProtocolSender protocolSender;
-    private Activity activity;
+    private AbstractActivity activity;
 
     public ControlService() {
     }
@@ -54,7 +55,6 @@ public class ControlService extends Service implements SendAble {
 
     @Override
     public void sendMessage(String command, byte[] message) {
-        System.out.println("send " + command + " " + new String(message));
         netWorkBinder.sendMessage(command, message);
     }
 
@@ -74,7 +74,7 @@ public class ControlService extends Service implements SendAble {
         activity.finish();
     }
 
-    public Activity getActivity() {
+    public AbstractActivity getActivity() {
         return activity;
     }
 
@@ -97,7 +97,8 @@ public class ControlService extends Service implements SendAble {
             }, BIND_AUTO_CREATE);
         }
 
-        public void setNowPage(Activity activity) {
+        public void setNowPage(AbstractActivity activity) {
+            System.out.println("change");
             ControlService.this.activity = activity;
         }
 
@@ -113,7 +114,7 @@ public class ControlService extends Service implements SendAble {
             ControlService.this.finishNowActivity();
         }
 
-        public Activity getActivity() {
+        public AbstractActivity getActivity() {
             return ControlService.this.getActivity();
         }
 
