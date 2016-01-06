@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <command>
-    <solver name="session" url="/session" manager="control.SessionLogic">
+    <solver name="session" url="/session" manager="com.wallet.xlo.walletforandroid.control.SessionLogic">
         <method name="getSessionID">
             <data>result</data>
         </method>
     </solver>
-    <solver name="register" url="/register" manager="control.UserLogic">
+    <solver name="register" url="/register" manager="com.wallet.xlo.walletforandroid.control.UserLogic">
         <method name="register">
             <data>result</data>
         </method>
     </solver>
-    <solver name="login" url="/login" manager="control.UserLogic">
+    <solver name="login" url="/login" manager="com.wallet.xlo.walletforandroid.control.UserLogic">
         <method name="login">
             <data>result</data>
         </method>
     </solver>
-    <solver name="key" url="/key" manager="control.SessionLogic">
+    <solver name="key" url="/key" manager="com.wallet.xlo.walletforandroid.control.SessionLogic">
         <method name="key" type="data"/>
     </solver>
 
-    <solver name="get money" url="/getMoney" manager="control.MoneyLogic">
+    <solver name="get money" url="/getMoney" manager="com.wallet.xlo.walletforandroid.control.MoneyLogic">
         <method name="getMoney" type="array">
             <data>typename</data>
             <data>value</data>
         </method>
     </solver>
-    <solver name="create money" url="/createMoney" manager="control.MoneyLogic">
+    <solver name="create money" url="/createMoney" manager="com.wallet.xlo.walletforandroid.control.MoneyLogic">
         <method name="updateMoney">
             <data>result</data>
         </method>
     </solver>
-    <solver name="remove money" url="/removeMoney" manager="control.MoneyLogic">
+    <solver name="remove money" url="/removeMoney" manager="com.wallet.xlo.walletforandroid.control.MoneyLogic">
         <method name="updateMoney">
             <data>result</data>
         </method>
     </solver>
-    <solver name="transfer money" url="/transferMoney" manager="control.MoneyLogic">
+    <solver name="transfer money" url="/transferMoney" manager="com.wallet.xlo.walletforandroid.control.MoneyLogic">
         <method name="updateMoney">
             <data>result</data>
         </method>
     </solver>
-    <solver name="rename money" url="/renameMoney" manager="control.MoneyLogic">
+    <solver name="rename money" url="/renameMoney" manager="com.wallet.xlo.walletforandroid.control.MoneyLogic">
         <method name="updateMoney">
             <data>result</data>
         </method>
     </solver>
 
-    <solver name="get budget" url="/getBudget" manager="control.BudgetLogic">
+    <solver name="get budget" url="/getBudget" manager="com.wallet.xlo.walletforandroid.control.BudgetLogic">
         <method name="getBudget" type="array">
             <data>typename</data>
             <data>income</data>
@@ -55,38 +55,38 @@
             <data>now expenditure</data>
         </method>
     </solver>
-    <solver name="create budget" url="/createBudget" manager="control.BudgetLogic">
+    <solver name="create budget" url="/createBudget" manager="com.wallet.xlo.walletforandroid.control.BudgetLogic">
         <method name="updateBudget">
             <data>result</data>
         </method>
     </solver>
-    <solver name="remove budget" url="/removeBudget" manager="control.BudgetLogic">
+    <solver name="remove budget" url="/removeBudget" manager="com.wallet.xlo.walletforandroid.control.BudgetLogic">
         <method name="updateBudget">
             <data>result</data>
         </method>
     </solver>
-    <solver name="change budge" url="/changeBudget" manager="control.BudgetLogic">
+    <solver name="change budge" url="/changeBudget" manager="com.wallet.xlo.walletforandroid.control.BudgetLogic">
         <method name="updateBudget">
             <data>result</data>
         </method>
     </solver>
 
-    <solver name="add edge" url="/addEdge" manager="control.EdgeLogic">
+    <solver name="add edge" url="/addEdge" manager="com.wallet.xlo.walletforandroid.control.EdgeLogic">
         <method name="updateEdge">
             <data>result</data>
         </method>
     </solver>
-    <solver name="remove edge" url="/removeEdge" manager="control.EdgeLogic">
+    <solver name="remove edge" url="/removeEdge" manager="com.wallet.xlo.walletforandroid.control.EdgeLogic">
         <method name="updateEdge">
             <data>result</data>
         </method>
     </solver>
-    <solver name="update edge" url="/updateEdge" manager="control.EdgeLogic">
+    <solver name="update edge" url="/updateEdge" manager="com.wallet.xlo.walletforandroid.control.EdgeLogic">
         <method name="updateEdge">
             <data>result</data>
         </method>
     </solver>
-    <solver name="get edge list" url="/getEdgeList" manager="control.EdgeLogic">
+    <solver name="get edge list" url="/getEdgeList" manager="com.wallet.xlo.walletforandroid.control.EdgeLogic">
         <method name="getEdgeList" type="array">
             <data>from</data>
             <data>to</data>
@@ -94,37 +94,37 @@
         </method>
     </solver>
 
-    <solver name="income" url="/income" manager="control.UseMoneyLogic">
+    <solver name="income" url="/income" manager="com.wallet.xlo.walletforandroid.control.UseMoneyLogic">
         <method name="update">
             <data>result</data>
         </method>
     </solver>
-    <solver name="expenditure" url="/expenditure" manager="control.UseMoneyLogic">
+    <solver name="expenditure" url="/expenditure" manager="com.wallet.xlo.walletforandroid.control.UseMoneyLogic">
         <method name="update">
             <data>result</data>
         </method>
     </solver>
 
-    <solver name="get money detail" url="/getMoneyDetail" manager="control.DetailLogic">
+    <solver name="get money detail" url="/getMoneyDetail" manager="com.wallet.xlo.walletforandroid.control.DetailLogic">
         <method name="getMoneyDetail" type="array">
             <data>moneyType</data>
             <data>value</data>
             <data>date</data>
         </method>
     </solver>
-    <solver name="get all detail" url="/getAllDetail" manager="control.DetailLogic">
+    <solver name="get all detail" url="/getAllDetail" manager="com.wallet.xlo.walletforandroid.control.DetailLogic">
         <method name="getAllDetail" type="array">
             <data>id</data>
             <data>event</data>
             <data>date</data>
         </method>
     </solver>
-    <solver name="get detail detail" url="/getDetailDetail" manager="control.DetailLogic">
+    <solver name="get detail detail" url="/getDetailDetail" manager="com.wallet.xlo.walletforandroid.control.DetailLogic">
         <method name="getDetailDetail">
             <data>result</data>
         </method>
     </solver>
-    <solver name="roll back" url="/rollBack" manager="control.DetailLogic">
+    <solver name="roll back" url="/rollBack" manager="com.wallet.xlo.walletforandroid.control.DetailLogic">
         <method name="rollBack"/>
     </solver>
 </command>

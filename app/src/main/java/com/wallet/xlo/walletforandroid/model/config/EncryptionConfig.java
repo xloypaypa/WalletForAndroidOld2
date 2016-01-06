@@ -2,7 +2,7 @@ package com.wallet.xlo.walletforandroid.model.config;
 
 import java.security.KeyPair;
 
-import model.tool.RSA;
+import com.wallet.xlo.walletforandroid.model.tool.RSA;
 
 /**
  * Created by xlo on 16-1-5.

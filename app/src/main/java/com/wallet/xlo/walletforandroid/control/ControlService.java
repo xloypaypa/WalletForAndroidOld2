@@ -8,21 +8,18 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.wallet.xlo.walletforandroid.AbstractActivity;
+import com.wallet.xlo.walletforandroid.view.AbstractActivity;
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.model.config.ProtocolConfig;
 import com.wallet.xlo.walletforandroid.network.GetAble;
 import com.wallet.xlo.walletforandroid.network.NetWorkService;
 import com.wallet.xlo.walletforandroid.network.SendAble;
 
-import net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.net.ProtocolSender;
 
-import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-
-import control.SessionLogic;
 
 public class ControlService extends Service implements SendAble {
 
