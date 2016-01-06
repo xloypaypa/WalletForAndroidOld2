@@ -1,10 +1,11 @@
 package control;
 
+import com.wallet.xlo.walletforandroid.LoginActivity;
 import com.wallet.xlo.walletforandroid.control.Client;
 import com.wallet.xlo.walletforandroid.control.ControlService;
 import com.wallet.xlo.walletforandroid.model.config.EncryptionConfig;
 
-import net.ProtocolSendAble;
+import net.ProtocolSender;
 
 import model.tool.RSA;
 
@@ -12,16 +13,15 @@ import model.tool.RSA;
  * Created by xlo on 2015/11/4.
  * it's the session logic
  */
-public class SessionLogic extends ProtocolSendAble {
+public class SessionLogic extends ProtocolSender {
 
     public SessionLogic(ControlService controlService) {
         super(controlService);
     }
 
     public void getSessionID(String id) {
-        //TODO
         Client.getClient().setSessionID(id);
-//        Main.startFrame(Login.class);
+        this.controlService.startActivity(LoginActivity.class);
     }
 
     public void key(byte[] data) {

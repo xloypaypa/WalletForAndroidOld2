@@ -5,4 +5,8 @@
     <string name="encrypt">encrypt</string>
     <string name="isEncrypt">is encrypt</string>
     <string name="connect">connect</string>
+    <string name="username">username</string>
+    <string name="password">passwrod</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
 </resources>

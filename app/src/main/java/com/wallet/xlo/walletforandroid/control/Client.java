@@ -43,7 +43,6 @@ public class Client {
     }
 
     public void setSessionID(String sessionID) {
-        System.out.println("get " + sessionID);
         this.sessionID = sessionID;
     }
 

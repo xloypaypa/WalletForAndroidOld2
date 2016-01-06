@@ -12,11 +12,11 @@ import java.util.Date;
  * Created by xlo on 2015/12/21.
  * it's the protocol sender
  */
-public abstract class ProtocolSendAble {
+public abstract class ProtocolSender {
 
     protected ControlService controlService;
 
-    public ProtocolSendAble(ControlService controlService) {
+    public ProtocolSender(ControlService controlService) {
         this.controlService = controlService;
     }
 

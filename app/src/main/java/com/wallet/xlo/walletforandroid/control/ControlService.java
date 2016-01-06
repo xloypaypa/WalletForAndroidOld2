@@ -1,5 +1,6 @@
 package com.wallet.xlo.walletforandroid.control;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -13,6 +14,9 @@ import com.wallet.xlo.walletforandroid.network.GetAble;
 import com.wallet.xlo.walletforandroid.network.NetWorkService;
 import com.wallet.xlo.walletforandroid.network.SendAble;
 
+import net.ProtocolSender;
+
+import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -22,6 +26,8 @@ import control.SessionLogic;
 public class ControlService extends Service implements SendAble {
 
     private NetWorkService.NetWorkBinder netWorkBinder;
+    private ProtocolSender protocolSender;
+    private Activity activity;
 
     public ControlService() {
     }
@@ -36,6 +42,9 @@ public class ControlService extends Service implements SendAble {
         } catch (IOException | XmlPullParserException e) {
             e.printStackTrace();
         }
+
+        this.protocolSender = new ProtocolSender(this) {
+        };
     }
 
     @Override
@@ -45,7 +54,28 @@ public class ControlService extends Service implements SendAble {
 
     @Override
     public void sendMessage(String command, byte[] message) {
+        System.out.println("send " + command + " " + new String(message));
         netWorkBinder.sendMessage(command, message);
+    }
+
+    public void startActivity(Class<? extends Activity> aClass) {
+        startActivity(aClass, true);
+    }
+
+    public void startActivity(Class<? extends Activity> aClass, boolean isFinish) {
+        Intent intent = new Intent(activity, aClass);
+        activity.startActivity(intent);
+        if (isFinish) {
+            finishNowActivity();
+        }
+    }
+
+    public void finishNowActivity() {
+        activity.finish();
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 
     public class ControlBind extends Binder {
@@ -67,8 +97,32 @@ public class ControlService extends Service implements SendAble {
             }, BIND_AUTO_CREATE);
         }
 
+        public void setNowPage(Activity activity) {
+            ControlService.this.activity = activity;
+        }
+
+        public void startActivity(Class<? extends Activity> aClass) {
+            ControlService.this.startActivity(aClass);
+        }
+
+        public void startActivity(Class<? extends Activity> aClass, boolean isFinish) {
+            ControlService.this.startActivity(aClass, isFinish);
+        }
+
+        public void finishNowActivity() {
+            ControlService.this.finishNowActivity();
+        }
+
+        public Activity getActivity() {
+            return ControlService.this.getActivity();
+        }
+
+        public ProtocolSender getProtocolSender() {
+            return protocolSender;
+        }
+
         private void startListenNet() {
-            netWorkBinder.whenConnect(new NetWorkService.WhenDisConnectAction() {
+            netWorkBinder.whenDisconnect(new NetWorkService.WhenDisconnectAction() {
                 @Override
                 public void action() {
                     System.out.println("disconnect");

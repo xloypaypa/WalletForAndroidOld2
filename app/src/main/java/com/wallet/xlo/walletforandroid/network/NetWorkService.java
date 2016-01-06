@@ -13,19 +13,19 @@ import java.util.Set;
 public class NetWorkService extends Service implements DisConnectAble {
     private NetWorkReadThread netWorkReadThread;
     private NetWorkWriteThread netWorkWriteThread;
-    private Set<WhenDisConnectAction> whenDisConnectActions;
+    private Set<WhenDisconnectAction> whenDisconnectActions;
     private volatile boolean isConnect;
     private Socket socket;
 
     public NetWorkService() {
-        this.whenDisConnectActions = new HashSet<>();
-        this.whenDisConnectActions.add(new WhenDisConnectAction() {
+        this.whenDisconnectActions = new HashSet<>();
+        this.whenDisconnectActions.add(new WhenDisconnectAction() {
             @Override
             public void action() {
                 netWorkReadThread.disConnect();
             }
         });
-        this.whenDisConnectActions.add(new WhenDisConnectAction() {
+        this.whenDisconnectActions.add(new WhenDisconnectAction() {
             @Override
             public void action() {
                 netWorkWriteThread.disConnect();
@@ -71,7 +71,7 @@ public class NetWorkService extends Service implements DisConnectAble {
     public synchronized void disConnect() {
         if (isConnect()) {
             isConnect = false;
-            for (WhenDisConnectAction now : whenDisConnectActions) {
+            for (WhenDisconnectAction now : whenDisconnectActions) {
                 now.action();
             }
         }
@@ -95,8 +95,8 @@ public class NetWorkService extends Service implements DisConnectAble {
             NetWorkService.this.stopSelf();
         }
 
-        public void whenConnect(WhenDisConnectAction whenDisConnectAction) {
-            whenDisConnectActions.add(whenDisConnectAction);
+        public void whenDisconnect(WhenDisconnectAction whenDisconnectAction) {
+            whenDisconnectActions.add(whenDisconnectAction);
         }
 
         @Override
@@ -111,7 +111,7 @@ public class NetWorkService extends Service implements DisConnectAble {
 
     }
 
-    public interface WhenDisConnectAction {
+    public interface WhenDisconnectAction {
         void action();
     }
 }

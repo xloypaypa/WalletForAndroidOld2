@@ -5,11 +5,10 @@ import com.wallet.xlo.walletforandroid.control.ControlService;
 import model.data.AllDetailData;
 import model.data.MessageData;
 import model.data.MoneyDetailData;
-import net.ProtocolSendAble;
+import net.ProtocolSender;
 
 import org.json.JSONException;
 
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.Map;
  * Created by xlo on 2015/12/21.
  * it's the detail logic
  */
-public class DetailLogic extends ProtocolSendAble {
+public class DetailLogic extends ProtocolSender {
 
     public DetailLogic(ControlService controlService) {
         super(controlService);

@@ -2,7 +2,7 @@ package control;
 
 import com.wallet.xlo.walletforandroid.control.ControlService;
 
-import net.ProtocolSendAble;
+import net.ProtocolSender;
 
 import org.json.JSONException;
 
@@ -15,7 +15,7 @@ import model.data.EdgeData;
  * Created by xlo on 15-11-8.
  * it's the edge logic
  */
-public class EdgeLogic extends ProtocolSendAble {
+public class EdgeLogic extends ProtocolSender {
 
     public EdgeLogic(ControlService controlService) {
         super(controlService);

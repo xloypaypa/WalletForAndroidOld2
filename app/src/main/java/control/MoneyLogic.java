@@ -2,7 +2,7 @@ package control;
 
 import com.wallet.xlo.walletforandroid.control.ControlService;
 
-import net.ProtocolSendAble;
+import net.ProtocolSender;
 
 import org.json.JSONException;
 
@@ -15,7 +15,7 @@ import model.data.MoneyData;
  * Created by xlo on 2015/11/5.
  * it's the money logic
  */
-public class MoneyLogic extends ProtocolSendAble {
+public class MoneyLogic extends ProtocolSender {
 
     public MoneyLogic(ControlService controlService) {
         super(controlService);
