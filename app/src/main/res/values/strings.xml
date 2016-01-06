@@ -9,4 +9,19 @@
     <string name="password">passwrod</string>
     <string name="login">login</string>
     <string name="register">register</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="detail">detail</string>
+    <string name="budget">budget</string>
+    <string name="money">money</string>
+    <string name="typeName">type name</string>
+    <string name="income">income</string>
+    <string name="expenditure">expenditure</string>
+    <string name="nowIncome">now income</string>
+    <string name="nowExpenditure">now expenditure</string>
+    <string name="value">value</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Message;
 import com.wallet.xlo.walletforandroid.control.ControlService;
 
 import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.view.MainActivity;
 
 /**
  * Created by xlo on 2015/11/4.
@@ -18,11 +19,8 @@ public class UserLogic extends ProtocolSender {
     }
 
     public void login(String result) {
-        //TODO
         if (result.equals("ok")) {
-            System.out.println("ok");
-//            JOptionPane.showMessageDialog(null, "login successfully", "info", JOptionPane.INFORMATION_MESSAGE);
-//            Main.startFrame(Money.class);
+            controlService.startActivity(MainActivity.class);
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", "error");
