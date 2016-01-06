@@ -1,6 +1,11 @@
 package com.wallet.xlo.walletforandroid.view;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -15,18 +20,58 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wallet.xlo.walletforandroid.R;
+import com.wallet.xlo.walletforandroid.control.ControlService;
+import com.wallet.xlo.walletforandroid.model.data.DataUpdateAction;
+import com.wallet.xlo.walletforandroid.model.data.MoneyData;
+import com.wallet.xlo.walletforandroid.model.data.node.MoneyNode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Handler moneyUpdateHandler;
+    private View moneyView, budgetView;
 
     private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        moneyUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int size = data.getInt("size");
+                System.out.println(size);
+                for (int i = 0; i < size; i++) {
+                    System.out.println(data.getString("money" + i) + " " + data.getDouble("value" + i));
+                }
+            }
+        };
+
+        MoneyData.getMoneyData().registerAction(new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<MoneyNode> moneyNodes = MoneyData.getMoneyData().getDataCollection();
+
+                Bundle data = new Bundle();
+                data.putInt("size", moneyNodes.size());
+                int pos = 0;
+                for (MoneyNode now : moneyNodes) {
+                    data.putString("money" + pos, now.getName());
+                    data.putDouble("value" + pos, now.getValue());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                moneyUpdateHandler.sendMessage(message);
+            }
+        });
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,6 +93,23 @@ public class MainActivity extends AbstractActivity
         listViews.add(mInflater.inflate(R.layout.layout_budget, null));
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);
+    }
+
+    protected void buildServiceConnection() {
+        conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                controlBind = (ControlService.ControlBind) service;
+                controlBind.setNowPage(MainActivity.this);
+                controlBind.getProtocolSender().getMoney();
+                controlBind.getProtocolSender().getBudget();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
     }
 
     @Override
@@ -97,6 +159,11 @@ public class MainActivity extends AbstractActivity
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            if (position == 0) {
+                moneyView = mListViews.get(0);
+            } else if (position == 1) {
+                budgetView = mListViews.get(1);
+            }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);
         }

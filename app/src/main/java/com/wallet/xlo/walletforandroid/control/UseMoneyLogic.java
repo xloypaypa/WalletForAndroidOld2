@@ -1,5 +1,8 @@
 package com.wallet.xlo.walletforandroid.control;
 
+import android.os.Bundle;
+import android.os.Message;
+
 import com.wallet.xlo.walletforandroid.control.ControlService;
 
 import com.wallet.xlo.walletforandroid.net.ProtocolSender;
@@ -24,9 +27,12 @@ public class UseMoneyLogic extends ProtocolSender {
             getMoneyDetail();
             getAllDetail();
         } else {
-//            JOptionPane.showMessageDialog(null, "server refuse", "info", JOptionPane.ERROR_MESSAGE);
+            Bundle bundle = new Bundle();
+            bundle.putString("title", "error");
+            bundle.putString("message", "server refuse");
+            Message message = new Message();
+            message.setData(bundle);
+            controlService.getActivity().dialogHandler.sendMessage(message);
         }
-        //TODO
-//        Main.unLockNowPage();
     }
 }

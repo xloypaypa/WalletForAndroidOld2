@@ -20,6 +20,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
     protected volatile ControlService.ControlBind controlBind;
 
     public Handler dialogHandler;
+    protected ServiceConnection conn;
 
     protected AbstractActivity() {
         dialogHandler = new Handler() {
@@ -39,7 +40,12 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     protected void bindControlService() {
         Intent service = new Intent(this, ControlService.class);
-        bindService(service, new ServiceConnection() {
+        buildServiceConnection();
+        bindService(service, conn, BIND_AUTO_CREATE);
+    }
+
+    protected void buildServiceConnection() {
+        conn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 controlBind = (ControlService.ControlBind) service;
@@ -50,7 +56,11 @@ public abstract class AbstractActivity extends AppCompatActivity {
             public void onServiceDisconnected(ComponentName name) {
 
             }
-        }, BIND_AUTO_CREATE);
+        };
+    }
+
+    protected void unbindControlService() {
+        unbindService(conn);
     }
 
 }

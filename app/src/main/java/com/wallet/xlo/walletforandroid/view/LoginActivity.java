@@ -48,4 +48,10 @@ public class LoginActivity extends AbstractActivity {
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindControlService();
+    }
 }

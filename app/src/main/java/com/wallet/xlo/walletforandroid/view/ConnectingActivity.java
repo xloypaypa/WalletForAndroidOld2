@@ -46,4 +46,10 @@ public class ConnectingActivity extends AbstractActivity {
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindControlService();
+    }
 }
