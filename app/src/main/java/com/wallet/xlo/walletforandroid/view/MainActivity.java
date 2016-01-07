@@ -84,7 +84,7 @@ public class MainActivity extends AbstractActivity {
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
                     TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_budget,
-                            (ViewGroup) findViewById(R.id.budget_row));
+                            budgetView, false);
                     TextView typename = (TextView) tableRow.findViewById(R.id.budget_row_typename);
                     TextView income = (TextView) tableRow.findViewById(R.id.budget_row_income);
                     TextView expenditure = (TextView) tableRow.findViewById(R.id.budget_row_expenditure);
@@ -134,7 +134,7 @@ public class MainActivity extends AbstractActivity {
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
                     TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_money,
-                            (ViewGroup) findViewById(R.id.money_row));
+                            moneyView, false);
                     TextView money = (TextView) tableRow.findViewById(R.id.money_row_money);
                     TextView value = (TextView) tableRow.findViewById(R.id.money_row_value);
                     money.setText(data.getString("money" + i));
