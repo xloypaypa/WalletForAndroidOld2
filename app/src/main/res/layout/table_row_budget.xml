@@ -5,31 +5,41 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/budget_row_typename"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/budget_row_income"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/budget_row_expenditure"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/budget_row_nowIncome"
         android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/budget_row_nowExpenditure"
         android:layout_weight="1" />
 </TableRow>
