@@ -6,85 +6,41 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.control.ControlService;
+import com.wallet.xlo.walletforandroid.model.data.BudgetData;
 import com.wallet.xlo.walletforandroid.model.data.DataUpdateAction;
 import com.wallet.xlo.walletforandroid.model.data.MoneyData;
+import com.wallet.xlo.walletforandroid.model.data.node.BudgetNode;
 import com.wallet.xlo.walletforandroid.model.data.node.MoneyNode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MainActivity extends AbstractActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AbstractActivity {
 
-    private Handler moneyUpdateHandler;
-    private View moneyView, budgetView;
+    private Handler moneyUpdateHandler, budgetUpdateHandler;
+    private TableLayout moneyView, budgetView;
 
     private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        moneyUpdateHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                int size = data.getInt("size");
-                System.out.println(size);
-                for (int i = 0; i < size; i++) {
-                    System.out.println(data.getString("money" + i) + " " + data.getDouble("value" + i));
-                }
-            }
-        };
-
-        MoneyData.getMoneyData().registerAction(new DataUpdateAction() {
-            @Override
-            public void action() {
-                Collection<MoneyNode> moneyNodes = MoneyData.getMoneyData().getDataCollection();
-
-                Bundle data = new Bundle();
-                data.putInt("size", moneyNodes.size());
-                int pos = 0;
-                for (MoneyNode now : moneyNodes) {
-                    data.putString("money" + pos, now.getName());
-                    data.putDouble("value" + pos, now.getValue());
-                    pos++;
-                }
-                Message message = new Message();
-                message.setData(data);
-                moneyUpdateHandler.sendMessage(message);
-            }
-        });
-
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        connectToData();
         bindControlService();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         viewPager = (ViewPager) findViewById(R.id.view);
         List<View> listViews = new ArrayList<>();
@@ -112,37 +68,100 @@ public class MainActivity extends AbstractActivity
         };
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    private void connectToData() {
+        connectToMoneyData();
+        connectToBudget();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    private void connectToBudget() {
+        budgetUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int size = data.getInt("size");
+                System.out.println(size);
+                budgetView.removeViews(1, budgetView.getChildCount() - 1);
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                for (int i = 0; i < size; i++) {
+                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_budget,
+                            (ViewGroup) findViewById(R.id.budget_row));
+                    TextView typename = (TextView) tableRow.findViewById(R.id.budget_row_typename);
+                    TextView income = (TextView) tableRow.findViewById(R.id.budget_row_income);
+                    TextView expenditure = (TextView) tableRow.findViewById(R.id.budget_row_expenditure);
+                    TextView nowIncome = (TextView) tableRow.findViewById(R.id.budget_row_nowIncome);
+                    TextView nowExpenditure = (TextView) tableRow.findViewById(R.id.budget_row_nowExpenditure);
+                    typename.setText(data.getString("typename" + i));
+                    income.setText(decimalFormat.format(data.getDouble("income" + i)));
+                    expenditure.setText(decimalFormat.format(data.getDouble("expenditure" + i)));
+                    nowIncome.setText(decimalFormat.format(data.getDouble("now income" + i)));
+                    nowExpenditure.setText(decimalFormat.format(data.getDouble("now expenditure" + i)));
+                    budgetView.addView(tableRow);
+                }
+            }
+        };
+
+        BudgetData.getBudgetData().registerAction(new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<BudgetNode> budgetNodes = BudgetData.getBudgetData().getDataCollection();
+
+                Bundle data = new Bundle();
+                data.putInt("size", budgetNodes.size());
+                int pos = 0;
+                for (BudgetNode now : budgetNodes) {
+                    data.putString("typename" + pos, now.getName());
+                    data.putDouble("income" + pos, now.getIncome());
+                    data.putDouble("expenditure" + pos, now.getExpenditure());
+                    data.putDouble("now income" + pos, now.getNowIncome());
+                    data.putDouble("now expenditure" + pos, now.getNowExpenditure());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                budgetUpdateHandler.sendMessage(message);
+            }
+        });
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    private void connectToMoneyData() {
+        moneyUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int size = data.getInt("size");
+                System.out.println(size);
+                moneyView.removeViews(1, moneyView.getChildCount() - 1);
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                for (int i = 0; i < size; i++) {
+                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_money,
+                            (ViewGroup) findViewById(R.id.money_row));
+                    TextView money = (TextView) tableRow.findViewById(R.id.money_row_money);
+                    TextView value = (TextView) tableRow.findViewById(R.id.money_row_value);
+                    money.setText(data.getString("money" + i));
+                    value.setText(decimalFormat.format(data.getDouble("value" + i)));
+                    moneyView.addView(tableRow);
+                }
+            }
+        };
 
-        if (id == R.id.nav_money) {
-            viewPager.setCurrentItem(0);
-        } else if (id == R.id.nav_budget) {
-            viewPager.setCurrentItem(1);
-        } else if (id == R.id.nav_detail) {
+        MoneyData.getMoneyData().registerAction(new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<MoneyNode> moneyNodes = MoneyData.getMoneyData().getDataCollection();
 
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                Bundle data = new Bundle();
+                data.putInt("size", moneyNodes.size());
+                int pos = 0;
+                for (MoneyNode now : moneyNodes) {
+                    data.putString("money" + pos, now.getName());
+                    data.putDouble("value" + pos, now.getValue());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                moneyUpdateHandler.sendMessage(message);
+            }
+        });
     }
 
     public class MyPagerAdapter extends PagerAdapter {
@@ -160,9 +179,9 @@ public class MainActivity extends AbstractActivity
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             if (position == 0) {
-                moneyView = mListViews.get(0);
+                moneyView = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
             } else if (position == 1) {
-                budgetView = mListViews.get(1);
+                budgetView = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
             }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);
@@ -173,4 +192,5 @@ public class MainActivity extends AbstractActivity
             return view == (object);
         }
     }
+
 }

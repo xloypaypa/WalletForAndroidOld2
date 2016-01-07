@@ -136,6 +136,7 @@ public class ControlService extends Service implements SendAble {
         }
 
         private void solveMessage(byte[] body) {
+            System.out.println(new String(body));
             byte[] url, message;
             for (int i = 0; i < body.length; i++) {
                 if (body[i] == '#') {
