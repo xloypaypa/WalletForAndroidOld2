@@ -18,7 +18,6 @@ public class RegisterActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        bindControlService();
 
         username = (EditText) this.findViewById(R.id.registerUsername);
         password = (EditText) this.findViewById(R.id.registerPassword);

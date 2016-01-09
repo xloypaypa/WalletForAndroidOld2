@@ -22,7 +22,6 @@ public class ConnectingActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connecting);
-        bindControlService();
 
         connect = (Button) this.findViewById(R.id.connect);
         ip = (EditText) this.findViewById(R.id.connectIp);
@@ -45,11 +44,5 @@ public class ConnectingActivity extends AbstractActivity {
                 controlBind.startServer(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
             }
         });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unbindControlService();
     }
 }

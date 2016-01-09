@@ -21,7 +21,6 @@ public class LoginActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        bindControlService();
 
         username = (EditText) this.findViewById(R.id.loginUsername);
         password = (EditText) this.findViewById(R.id.loginPassword);
@@ -47,11 +46,5 @@ public class LoginActivity extends AbstractActivity {
                 controlBind.startActivity(RegisterActivity.class, false);
             }
         });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unbindControlService();
     }
 }

@@ -24,4 +24,6 @@
     <string name="nowIncome">now income</string>
     <string name="nowExpenditure">now expenditure</string>
     <string name="value">value</string>
+    <string name="addMoney">add money</string>
+    <string name="useMoney">use money</string>
 </resources>

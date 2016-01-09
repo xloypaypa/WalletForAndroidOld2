@@ -23,9 +23,9 @@ import java.io.IOException;
 
 public class ControlService extends Service implements SendAble {
 
-    private NetWorkService.NetWorkBinder netWorkBinder;
-    private ProtocolSender protocolSender;
-    private AbstractActivity activity;
+    private volatile static NetWorkService.NetWorkBinder netWorkBinder;
+    private volatile static ProtocolSender protocolSender;
+    private volatile static AbstractActivity activity;
 
     public ControlService() {
     }
@@ -41,7 +41,7 @@ public class ControlService extends Service implements SendAble {
             e.printStackTrace();
         }
 
-        this.protocolSender = new ProtocolSender(this) {
+        protocolSender = new ProtocolSender(this) {
         };
     }
 
@@ -96,7 +96,7 @@ public class ControlService extends Service implements SendAble {
 
         public void setNowPage(AbstractActivity activity) {
             System.out.println("change");
-            ControlService.this.activity = activity;
+            ControlService.activity = activity;
         }
 
         public void startActivity(Class<? extends Activity> aClass) {

@@ -1,6 +1,7 @@
 package com.wallet.xlo.walletforandroid.view;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,24 +33,36 @@ import java.util.List;
 public class MainActivity extends AbstractActivity {
 
     private Handler moneyUpdateHandler, budgetUpdateHandler;
-    private TableLayout moneyView, budgetView;
+    private TableLayout moneyTable, budgetTable;
 
     private ViewPager viewPager;
+    private View moneyPage, budgetPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connectToData();
-        bindControlService();
 
         viewPager = (ViewPager) findViewById(R.id.view);
         List<View> listViews = new ArrayList<>();
         LayoutInflater mInflater = getLayoutInflater();
-        listViews.add(mInflater.inflate(R.layout.layout_money, null));
-        listViews.add(mInflater.inflate(R.layout.layout_budget, null));
+        moneyPage = mInflater.inflate(R.layout.layout_money, null);
+        budgetPage = mInflater.inflate(R.layout.layout_budget, null);
+        listViews.add(moneyPage);
+        listViews.add(budgetPage);
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);
+
+        connectToData();
+
+        Button addMoney = (Button) moneyPage.findViewById(R.id.moneyAddMoney);
+        addMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddMoneyActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void buildServiceConnection() {
@@ -80,11 +94,11 @@ public class MainActivity extends AbstractActivity {
                 Bundle data = msg.getData();
                 int size = data.getInt("size");
                 System.out.println(size);
-                budgetView.removeViews(1, budgetView.getChildCount() - 1);
+                budgetTable.removeViews(1, budgetTable.getChildCount() - 1);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
                     TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_budget,
-                            budgetView, false);
+                            budgetTable, false);
                     TextView typename = (TextView) tableRow.findViewById(R.id.budget_row_typename);
                     TextView income = (TextView) tableRow.findViewById(R.id.budget_row_income);
                     TextView expenditure = (TextView) tableRow.findViewById(R.id.budget_row_expenditure);
@@ -95,7 +109,7 @@ public class MainActivity extends AbstractActivity {
                     expenditure.setText(decimalFormat.format(data.getDouble("expenditure" + i)));
                     nowIncome.setText(decimalFormat.format(data.getDouble("now income" + i)));
                     nowExpenditure.setText(decimalFormat.format(data.getDouble("now expenditure" + i)));
-                    budgetView.addView(tableRow);
+                    budgetTable.addView(tableRow);
                 }
             }
         };
@@ -130,16 +144,16 @@ public class MainActivity extends AbstractActivity {
                 Bundle data = msg.getData();
                 int size = data.getInt("size");
                 System.out.println(size);
-                moneyView.removeViews(1, moneyView.getChildCount() - 1);
+                moneyTable.removeViews(1, moneyTable.getChildCount() - 1);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
                     TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_money,
-                            moneyView, false);
+                            moneyTable, false);
                     TextView money = (TextView) tableRow.findViewById(R.id.money_row_money);
                     TextView value = (TextView) tableRow.findViewById(R.id.money_row_value);
                     money.setText(data.getString("money" + i));
                     value.setText(decimalFormat.format(data.getDouble("value" + i)));
-                    moneyView.addView(tableRow);
+                    moneyTable.addView(tableRow);
                 }
             }
         };
@@ -179,9 +193,9 @@ public class MainActivity extends AbstractActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             if (position == 0) {
-                moneyView = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
+                moneyTable = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
             } else if (position == 1) {
-                budgetView = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
+                budgetTable = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
             }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);

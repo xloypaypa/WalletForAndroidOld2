@@ -33,9 +33,15 @@ public abstract class AbstractActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        controlBind.setNowPage(this);
+    protected void onStart() {
+        super.onStart();
+        bindControlService();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindControlService();
     }
 
     protected void bindControlService() {
