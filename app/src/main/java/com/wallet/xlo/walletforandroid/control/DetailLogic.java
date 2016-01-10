@@ -1,11 +1,9 @@
 package com.wallet.xlo.walletforandroid.control;
 
-import com.wallet.xlo.walletforandroid.control.ControlService;
-
 import com.wallet.xlo.walletforandroid.model.data.AllDetailData;
 import com.wallet.xlo.walletforandroid.model.data.MessageData;
 import com.wallet.xlo.walletforandroid.model.data.MoneyDetailData;
-import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.network.ProtocolSender;
 
 import org.json.JSONException;
 

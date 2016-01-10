@@ -1,4 +1,4 @@
-package com.wallet.xlo.walletforandroid.net;
+package com.wallet.xlo.walletforandroid.network;
 
 import com.wallet.xlo.walletforandroid.control.ControlService;
 
@@ -153,7 +153,7 @@ public abstract class ProtocolSender {
     public void getAllDetail() throws JSONException {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
-        getAllDetail(calendar.getTime(), new Date());
+        getAllDetail(calendar.getTime(), new Date(new Date().getTime() + 10000));
     }
 
     public void getAllDetail(Date from, Date to) throws JSONException {

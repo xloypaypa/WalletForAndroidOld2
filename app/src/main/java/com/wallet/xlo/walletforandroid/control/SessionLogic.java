@@ -1,11 +1,9 @@
 package com.wallet.xlo.walletforandroid.control;
 
 import com.wallet.xlo.walletforandroid.view.LoginActivity;
-import com.wallet.xlo.walletforandroid.control.Client;
-import com.wallet.xlo.walletforandroid.control.ControlService;
 import com.wallet.xlo.walletforandroid.model.config.EncryptionConfig;
 
-import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.network.ProtocolSender;
 
 import com.wallet.xlo.walletforandroid.model.tool.RSA;
 

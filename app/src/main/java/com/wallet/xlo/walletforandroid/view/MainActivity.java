@@ -85,6 +85,14 @@ public class MainActivity extends AbstractActivity {
                 startActivity(intent);
             }
         });
+
+        Button rollBack = (Button) detailPage.findViewById(R.id.rollBackAction);
+        rollBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controlBind.getProtocolSender().rollback();
+            }
+        });
     }
 
     protected void buildServiceConnection() {

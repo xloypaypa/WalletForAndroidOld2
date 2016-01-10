@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.wallet.xlo.walletforandroid.model.data.BudgetData;
-import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.network.ProtocolSender;
 
 import org.json.JSONException;
 

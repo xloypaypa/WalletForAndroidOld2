@@ -44,13 +44,15 @@ public class NetWorkWriteThread extends Thread implements SendAble, DisConnectAb
 
     private void sendMessage() throws IOException {
         synchronized (NetWorkWriteThread.class) {
-            byte[] message = this.queue.poll();
-            for (int i = 0; i < message.length; i++) {
-                byte now = message[i];
-                try {
-                    this.outputStream.write(now);
-                } catch (SocketTimeoutException e) {
-                    i--;
+            while (!this.queue.isEmpty()) {
+                byte[] message = this.queue.poll();
+                for (int i = 0; i < message.length; i++) {
+                    byte now = message[i];
+                    try {
+                        this.outputStream.write(now);
+                    } catch (SocketTimeoutException e) {
+                        i--;
+                    }
                 }
             }
         }

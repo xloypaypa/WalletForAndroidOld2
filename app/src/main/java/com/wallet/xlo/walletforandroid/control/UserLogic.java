@@ -3,7 +3,7 @@ package com.wallet.xlo.walletforandroid.control;
 import android.os.Bundle;
 import android.os.Message;
 
-import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.network.ProtocolSender;
 import com.wallet.xlo.walletforandroid.view.MainActivity;
 
 /**

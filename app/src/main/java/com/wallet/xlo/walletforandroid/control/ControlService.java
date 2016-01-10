@@ -15,7 +15,7 @@ import com.wallet.xlo.walletforandroid.network.GetAble;
 import com.wallet.xlo.walletforandroid.network.NetWorkService;
 import com.wallet.xlo.walletforandroid.network.SendAble;
 
-import com.wallet.xlo.walletforandroid.net.ProtocolSender;
+import com.wallet.xlo.walletforandroid.network.ProtocolSender;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -52,7 +52,6 @@ public class ControlService extends Service implements SendAble {
 
     @Override
     public void sendMessage(String command, byte[] message) {
-        System.out.println("send " + command + " " + new String(message));
         netWorkBinder.sendMessage(command, message);
     }
 
@@ -136,7 +135,6 @@ public class ControlService extends Service implements SendAble {
         }
 
         private void solveMessage(byte[] body) {
-            System.out.println(new String(body));
             byte[] url, message;
             for (int i = 0; i < body.length; i++) {
                 if (body[i] == '#') {
