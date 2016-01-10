@@ -31,4 +31,8 @@
     <string name="addBudget">add budget</string>
     <string name="changeBudget">change budget</string>
     <string name="removeBudget">remove budget</string>
+    <string name="rollBack">roll back</string>
+    <string name="id">id</string>
+    <string name="event">event</string>
+    <string name="date">date</string>
 </resources>

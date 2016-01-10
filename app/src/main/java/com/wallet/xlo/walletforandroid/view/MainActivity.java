@@ -19,24 +19,35 @@ import android.widget.TextView;
 
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.control.ControlService;
+import com.wallet.xlo.walletforandroid.model.data.AllDetailData;
 import com.wallet.xlo.walletforandroid.model.data.BudgetData;
 import com.wallet.xlo.walletforandroid.model.data.DataUpdateAction;
 import com.wallet.xlo.walletforandroid.model.data.MoneyData;
 import com.wallet.xlo.walletforandroid.model.data.node.BudgetNode;
+import com.wallet.xlo.walletforandroid.model.data.node.DetailNode;
 import com.wallet.xlo.walletforandroid.model.data.node.MoneyNode;
 
+import org.json.JSONException;
+
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AbstractActivity {
 
-    private Handler moneyUpdateHandler, budgetUpdateHandler;
-    private TableLayout moneyTable, budgetTable;
+    private Handler moneyUpdateHandler, budgetUpdateHandler, detailUpdateHandler;
+    private TableLayout moneyTable, budgetTable, detailTable;
 
     private ViewPager viewPager;
-    private View moneyPage, budgetPage;
+    private View moneyPage, budgetPage, detailPage;
+
+    private DataUpdateAction moneyUpdateAction, budgetUpdateAction, detailUpdateAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +59,10 @@ public class MainActivity extends AbstractActivity {
         LayoutInflater mInflater = getLayoutInflater();
         moneyPage = mInflater.inflate(R.layout.layout_money, null);
         budgetPage = mInflater.inflate(R.layout.layout_budget, null);
+        detailPage = mInflater.inflate(R.layout.layout_detail, null);
         listViews.add(moneyPage);
         listViews.add(budgetPage);
+        listViews.add(detailPage);
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);
 
@@ -80,8 +93,13 @@ public class MainActivity extends AbstractActivity {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 controlBind = (ControlService.ControlBind) service;
                 controlBind.setNowPage(MainActivity.this);
-                controlBind.getProtocolSender().getMoney();
-                controlBind.getProtocolSender().getBudget();
+                try {
+                    controlBind.getProtocolSender().getMoney();
+                    controlBind.getProtocolSender().getBudget();
+                    controlBind.getProtocolSender().getAllDetail();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -94,6 +112,67 @@ public class MainActivity extends AbstractActivity {
     private void connectToData() {
         connectToMoneyData();
         connectToBudget();
+        connectToDetail();
+    }
+
+    private void connectToDetail() {
+        detailUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int size = data.getInt("size");
+                System.out.println(size);
+                detailTable.removeViews(1, detailTable.getChildCount() - 1);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                for (int i = 0; i < size; i++) {
+                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_detail,
+                            detailTable, false);
+                    final TextView id = (TextView) tableRow.findViewById(R.id.detail_row_id);
+                    final TextView event = (TextView) tableRow.findViewById(R.id.detail_row_event);
+                    TextView date = (TextView) tableRow.findViewById(R.id.detail_row_date);
+
+                    final String idString = data.getString("id" + i);
+                    final String eventString = data.getString("event" + i);
+                    final long dateLong = data.getLong("date" + i);
+
+                    id.setText(idString);
+                    event.setText(eventString);
+                    date.setText(simpleDateFormat.format(new Date(dateLong)));
+
+                    detailTable.addView(tableRow);
+                }
+            }
+        };
+
+        detailUpdateAction = new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<DetailNode> detailCollection = AllDetailData.getAllDetailData().getDataCollection();
+                List<DetailNode> detailNodes = new ArrayList<>();
+                for (DetailNode now : detailCollection) {
+                    detailNodes.add(now);
+                }
+                Collections.sort(detailNodes, new Comparator<DetailNode>() {
+                    @Override
+                    public int compare(DetailNode o1, DetailNode o2) {
+                        return o2.getDate().compareTo(o1.getDate());
+                    }
+                });
+
+                Bundle data = new Bundle();
+                data.putInt("size", detailNodes.size());
+                int pos = 0;
+                for (DetailNode now : detailNodes) {
+                    data.putString("id" + pos, now.getId());
+                    data.putString("event" + pos, now.getEvent());
+                    data.putLong("date" + pos, now.getDate().getTime());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                detailUpdateHandler.sendMessage(message);
+            }
+        };
     }
 
     private void connectToBudget() {
@@ -144,7 +223,7 @@ public class MainActivity extends AbstractActivity {
             }
         };
 
-        BudgetData.getBudgetData().registerAction(new DataUpdateAction() {
+        budgetUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
                 Collection<BudgetNode> budgetNodes = BudgetData.getBudgetData().getDataCollection();
@@ -164,7 +243,7 @@ public class MainActivity extends AbstractActivity {
                 message.setData(data);
                 budgetUpdateHandler.sendMessage(message);
             }
-        });
+        };
     }
 
     private void connectToMoneyData() {
@@ -201,7 +280,7 @@ public class MainActivity extends AbstractActivity {
             }
         };
 
-        MoneyData.getMoneyData().registerAction(new DataUpdateAction() {
+        moneyUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
                 Collection<MoneyNode> moneyNodes = MoneyData.getMoneyData().getDataCollection();
@@ -218,7 +297,7 @@ public class MainActivity extends AbstractActivity {
                 message.setData(data);
                 moneyUpdateHandler.sendMessage(message);
             }
-        });
+        };
     }
 
     public class MyPagerAdapter extends PagerAdapter {
@@ -234,11 +313,31 @@ public class MainActivity extends AbstractActivity {
         }
 
         @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(mListViews.get(position));
+            if (position == 0) {
+                MoneyData.getMoneyData().removeAction(moneyUpdateAction);
+            } else if (position == 1) {
+                BudgetData.getBudgetData().removeAction(budgetUpdateAction);
+            } else if (position == 2) {
+                AllDetailData.getAllDetailData().removeAction(detailUpdateAction);
+            }
+        }
+
+        @Override
         public Object instantiateItem(ViewGroup container, int position) {
             if (position == 0) {
                 moneyTable = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
+                MoneyData.getMoneyData().registerAction(moneyUpdateAction);
+                moneyUpdateAction.action();
             } else if (position == 1) {
                 budgetTable = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
+                BudgetData.getBudgetData().registerAction(budgetUpdateAction);
+                budgetUpdateAction.action();
+            } else if (position == 2) {
+                detailTable = (TableLayout) mListViews.get(2).findViewById(R.id.detailTable);
+                AllDetailData.getAllDetailData().registerAction(detailUpdateAction);
+                detailUpdateAction.action();
             }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);

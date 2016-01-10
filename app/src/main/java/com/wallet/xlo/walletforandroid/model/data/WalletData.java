@@ -13,6 +13,7 @@ public abstract class WalletData<T> {
 
     protected WalletData() {
         this.dataUpdateActions = new HashSet<>();
+        this.dataNodes = new HashMap<>();
     }
 
     public void registerAction(DataUpdateAction dataUpdateAction) {

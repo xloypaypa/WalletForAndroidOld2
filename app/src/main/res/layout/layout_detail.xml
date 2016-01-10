@@ -5,18 +5,17 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
-        android:layout_above="@+id/linearLayout"
+        android:id="@+id/scrollView3"
+        android:layout_above="@+id/rollBackAction"
         android:layout_alignParentTop="true">
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/moneyTable">
+            android:layout_height="match_parent"
+            android:id="@+id/detailTable">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:background="@drawable/table_frame_gray"
                 android:layout_height="match_parent">
 
                 <TextView
@@ -24,7 +23,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/table_frame_gray"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/money"
+                    android:text="@string/id"
                     android:layout_weight="1" />
 
                 <TextView
@@ -32,35 +31,25 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/table_frame_gray"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/value"
+                    android:text="@string/event"
                     android:layout_weight="1" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/table_frame_gray"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/date"
+                    android:layout_weight="1" />
             </TableRow>
         </TableLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/rollBack"
+        android:id="@+id/rollBackAction"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/addMoney"
-            android:id="@+id/moneyAddMoney"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/useMoney"
-            android:id="@+id/moneyUseMoney"
-            android:layout_gravity="center_horizontal" />
-
-    </LinearLayout>
-
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
