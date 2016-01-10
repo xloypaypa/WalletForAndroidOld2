@@ -137,6 +137,10 @@ public class ControlService extends Service implements SendAble {
             return protocolSender;
         }
 
+        public void stopNet() {
+            stopService(new Intent(ControlService.this, NetWorkService.class));
+        }
+
         private void startListenNet() {
             netWorkBinder.whenDisconnect(new NetWorkService.WhenDisconnectAction() {
                 @Override

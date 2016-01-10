@@ -3,6 +3,7 @@ package com.wallet.xlo.walletforandroid.view;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -19,6 +20,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     protected volatile ControlService.ControlBind controlBind;
 
+    private volatile static int activityNum = 0;
+
     public Handler dialogHandler;
     protected ServiceConnection conn;
 
@@ -33,6 +36,12 @@ public abstract class AbstractActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityNum++;
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         bindControlService();
@@ -42,6 +51,15 @@ public abstract class AbstractActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unbindControlService();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        activityNum--;
+        if (activityNum == 0) {
+            controlBind.stopNet();
+        }
     }
 
     protected void bindControlService() {
