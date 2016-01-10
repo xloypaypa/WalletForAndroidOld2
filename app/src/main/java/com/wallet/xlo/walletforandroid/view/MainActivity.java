@@ -22,9 +22,11 @@ import com.wallet.xlo.walletforandroid.control.ControlService;
 import com.wallet.xlo.walletforandroid.model.data.AllDetailData;
 import com.wallet.xlo.walletforandroid.model.data.BudgetData;
 import com.wallet.xlo.walletforandroid.model.data.DataUpdateAction;
+import com.wallet.xlo.walletforandroid.model.data.EdgeData;
 import com.wallet.xlo.walletforandroid.model.data.MoneyData;
 import com.wallet.xlo.walletforandroid.model.data.node.BudgetNode;
 import com.wallet.xlo.walletforandroid.model.data.node.DetailNode;
+import com.wallet.xlo.walletforandroid.model.data.node.EdgeNode;
 import com.wallet.xlo.walletforandroid.model.data.node.MoneyNode;
 
 import org.json.JSONException;
@@ -41,13 +43,13 @@ import java.util.Locale;
 
 public class MainActivity extends AbstractActivity {
 
-    private Handler moneyUpdateHandler, budgetUpdateHandler, detailUpdateHandler;
-    private TableLayout moneyTable, budgetTable, detailTable;
+    private Handler moneyUpdateHandler, budgetUpdateHandler, detailUpdateHandler, edgeUpdateHandler;
+    private TableLayout moneyTable, budgetTable, detailTable, edgeTable;
 
     private ViewPager viewPager;
-    private View moneyPage, budgetPage, detailPage;
+    private View moneyPage, budgetPage, detailPage, edgePage;
 
-    private DataUpdateAction moneyUpdateAction, budgetUpdateAction, detailUpdateAction;
+    private DataUpdateAction moneyUpdateAction, budgetUpdateAction, detailUpdateAction, edgeUpdateAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +62,11 @@ public class MainActivity extends AbstractActivity {
         moneyPage = mInflater.inflate(R.layout.layout_money, null);
         budgetPage = mInflater.inflate(R.layout.layout_budget, null);
         detailPage = mInflater.inflate(R.layout.layout_detail, null);
+        edgePage = mInflater.inflate(R.layout.layout_edge, null);
         listViews.add(moneyPage);
         listViews.add(budgetPage);
         listViews.add(detailPage);
+        listViews.add(edgePage);
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);
 
@@ -93,6 +97,15 @@ public class MainActivity extends AbstractActivity {
                 controlBind.getProtocolSender().rollback();
             }
         });
+
+        Button addEdge = (Button) edgePage.findViewById(R.id.addEdgeAction);
+        addEdge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddEdgeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void buildServiceConnection() {
@@ -104,6 +117,7 @@ public class MainActivity extends AbstractActivity {
                 try {
                     controlBind.getProtocolSender().getMoney();
                     controlBind.getProtocolSender().getBudget();
+                    controlBind.getProtocolSender().getEdge();
                     controlBind.getProtocolSender().getAllDetail();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,6 +135,64 @@ public class MainActivity extends AbstractActivity {
         connectToMoneyData();
         connectToBudget();
         connectToDetail();
+        connectToEdge();
+    }
+
+    private void connectToEdge() {
+        edgeUpdateHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int size = data.getInt("size");
+                edgeTable.removeViews(1, edgeTable.getChildCount() - 1);
+                for (int i = 0; i < size; i++) {
+                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_edge,
+                            edgeTable, false);
+                    final TextView from = (TextView) tableRow.findViewById(R.id.edge_row_from);
+                    final TextView to = (TextView) tableRow.findViewById(R.id.edge_row_to);
+
+                    final String fromString = data.getString("from" + i);
+                    final String toString = data.getString("to" + i);
+                    final String scriptString = data.getString("script" + i);
+
+                    from.setText(fromString);
+                    to.setText(toString);
+
+                    tableRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, ChangeEdgeActivity.class);
+                            intent.putExtra("from", fromString);
+                            intent.putExtra("to", toString);
+                            intent.putExtra("script", scriptString);
+                            startActivity(intent);
+                        }
+                    });
+
+                    edgeTable.addView(tableRow);
+                }
+            }
+        };
+
+        edgeUpdateAction = new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<EdgeNode> edgeNodes = EdgeData.getEdgeData().getDataCollection();
+
+                Bundle data = new Bundle();
+                data.putInt("size", edgeNodes.size());
+                int pos = 0;
+                for (EdgeNode now : edgeNodes) {
+                    data.putString("from" + pos, now.getFrom());
+                    data.putString("to" + pos, now.getTo());
+                    data.putString("script" + pos, now.getScript());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                edgeUpdateHandler.sendMessage(message);
+            }
+        };
     }
 
     private void connectToDetail() {
@@ -326,6 +398,8 @@ public class MainActivity extends AbstractActivity {
                 BudgetData.getBudgetData().removeAction(budgetUpdateAction);
             } else if (position == 2) {
                 AllDetailData.getAllDetailData().removeAction(detailUpdateAction);
+            } else if (position == 3) {
+                EdgeData.getEdgeData().removeAction(edgeUpdateAction);
             }
         }
 
@@ -343,6 +417,10 @@ public class MainActivity extends AbstractActivity {
                 detailTable = (TableLayout) mListViews.get(2).findViewById(R.id.detailTable);
                 AllDetailData.getAllDetailData().registerAction(detailUpdateAction);
                 detailUpdateAction.action();
+            } else if (position == 3) {
+                edgeTable = (TableLayout) mListViews.get(3).findViewById(R.id.edgeTable);
+                EdgeData.getEdgeData().registerAction(edgeUpdateAction);
+                edgeUpdateAction.action();
             }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);

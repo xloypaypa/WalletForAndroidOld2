@@ -6,7 +6,7 @@
     <string name="isEncrypt">is encrypt</string>
     <string name="connect">connect</string>
     <string name="username">username</string>
-    <string name="password">passwrod</string>
+    <string name="password">password</string>
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="title_activity_main">MainActivity</string>
@@ -35,4 +35,10 @@
     <string name="id">id</string>
     <string name="event">event</string>
     <string name="date">date</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="addEdge">add edge</string>
+    <string name="script">script</string>
+    <string name="removeEdge">remove edge</string>
+    <string name="changeEdge">change edge</string>
 </resources>

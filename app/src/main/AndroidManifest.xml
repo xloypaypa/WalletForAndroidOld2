@@ -34,7 +34,9 @@
         <activity android:name=".view.AddMoneyActivity" />
         <activity android:name=".view.ChangeMoneyActivity" />
         <activity android:name=".view.AddBudgetActivity" />
-        <activity android:name=".view.ChangeBudgetActivity"></activity>
+        <activity android:name=".view.ChangeBudgetActivity" />
+        <activity android:name=".view.AddEdgeActivity" />
+        <activity android:name=".view.ChangeEdgeActivity"></activity>
     </application>
 
 </manifest>
