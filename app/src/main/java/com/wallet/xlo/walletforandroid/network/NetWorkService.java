@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,20 +19,6 @@ public class NetWorkService extends Service implements DisConnectAble {
     private Socket socket;
 
     public NetWorkService() {
-        this.whenDisconnectActions = new HashSet<>();
-        this.whenDisconnectActions.add(new WhenDisconnectAction() {
-            @Override
-            public void action() {
-                netWorkReadThread.disConnect();
-            }
-        });
-        this.whenDisconnectActions.add(new WhenDisconnectAction() {
-            @Override
-            public void action() {
-                netWorkWriteThread.disConnect();
-            }
-        });
-        isConnect = false;
     }
 
     public void startConnect(final String ip, final int port) {
@@ -78,6 +65,26 @@ public class NetWorkService extends Service implements DisConnectAble {
     }
 
     public class NetWorkBinder extends Binder implements SendAble, GetAble {
+
+        public void init() {
+            isConnect = false;
+            netWorkWriteThread = null;
+            netWorkReadThread = null;
+            socket = null;
+            whenDisconnectActions = new HashSet<>();
+            whenDisconnectActions.add(new WhenDisconnectAction() {
+                @Override
+                public void action() {
+                    netWorkReadThread.disConnect();
+                }
+            });
+            whenDisconnectActions.add(new WhenDisconnectAction() {
+                @Override
+                public void action() {
+                    netWorkWriteThread.disConnect();
+                }
+            });
+        }
 
         public Socket getSocket() {
             return socket;

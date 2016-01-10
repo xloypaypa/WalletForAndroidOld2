@@ -6,7 +6,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 
 import com.wallet.xlo.walletforandroid.view.AbstractActivity;
 import com.wallet.xlo.walletforandroid.R;
@@ -16,6 +18,7 @@ import com.wallet.xlo.walletforandroid.network.NetWorkService;
 import com.wallet.xlo.walletforandroid.network.SendAble;
 
 import com.wallet.xlo.walletforandroid.network.ProtocolSender;
+import com.wallet.xlo.walletforandroid.view.ConnectingActivity;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -79,19 +82,35 @@ public class ControlService extends Service implements SendAble {
 
         public void startServer(final String ip, final int port) {
             Intent service = new Intent(ControlService.this, NetWorkService.class);
-            bindService(service, new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    netWorkBinder = (NetWorkService.NetWorkBinder) service;
-                    netWorkBinder.startConnect(ip, port);
-                    startListenNet();
-                }
+            try {
+                bindService(service, new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName name, IBinder service) {
+                        netWorkBinder = (NetWorkService.NetWorkBinder) service;
+                        netWorkBinder.init();
+                        netWorkBinder.startConnect(ip, port);
+                        try {
+                            startListenNet();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            stopService(new Intent(ControlService.this, NetWorkService.class));
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", "error");
+                            bundle.putString("message", "can't connect server");
+                            Message message = new Message();
+                            message.setData(bundle);
+                            ControlService.this.getActivity().dialogHandler.sendMessage(message);
+                        }
+                    }
 
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
 
-                }
-            }, BIND_AUTO_CREATE);
+                    }
+                }, BIND_AUTO_CREATE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         public void setNowPage(AbstractActivity activity) {
@@ -122,7 +141,11 @@ public class ControlService extends Service implements SendAble {
             netWorkBinder.whenDisconnect(new NetWorkService.WhenDisconnectAction() {
                 @Override
                 public void action() {
-                    System.out.println("disconnect");
+                    stopService(new Intent(ControlService.this, NetWorkService.class));
+                    Intent intent = new Intent(ControlService.this, ConnectingActivity.class);
+                    intent.putExtra("flag", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    ControlService.this.startActivity(intent);
                 }
             });
             netWorkBinder.setGetCallBack(new GetAble.CallBack() {

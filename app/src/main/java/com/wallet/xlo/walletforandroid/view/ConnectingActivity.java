@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.wallet.xlo.walletforandroid.R;
+import com.wallet.xlo.walletforandroid.dialog.DialogBuilder;
 import com.wallet.xlo.walletforandroid.model.config.EncryptionConfig;
 
 public class ConnectingActivity extends AbstractActivity {
@@ -44,5 +45,14 @@ public class ConnectingActivity extends AbstractActivity {
                 controlBind.startServer(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean flag = getIntent().getBooleanExtra("flag", false);
+        if (flag) {
+            DialogBuilder.showMessageDialog("error", "can't connect server", this);
+        }
     }
 }
