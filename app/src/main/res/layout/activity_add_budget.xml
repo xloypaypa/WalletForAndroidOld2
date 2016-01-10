@@ -7,12 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wallet.xlo.walletforandroid.view.ChangeMoneyActivity">
+    tools:context="com.wallet.xlo.walletforandroid.view.AddBudgetActivity">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tableLayout5">
+        android:id="@+id/tableLayout6">
 
         <TableRow
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/changeMoneyType"
+                android:id="@+id/addBudgetTypename"
                 android:layout_weight="1" />
         </TableRow>
 
@@ -37,38 +37,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/value" />
+                android:text="@string/income" />
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
-                android:id="@+id/changeMoneyValue"
-                android:layout_weight="1"
-                android:editable="false"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
+                android:id="@+id/addBudgetIncome"
+                android:layout_weight="1" />
+        </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expenditure" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/addBudgetExpenditure"
+                android:layout_weight="1" />
         </TableRow>
     </TableLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/changeMoney"
-        android:id="@+id/changeMoneyAction"
-        android:layout_below="@+id/tableLayout5"
+        android:text="@string/addBudget"
+        android:id="@+id/AddBudgetAction"
+        android:layout_below="@+id/tableLayout6"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/removeMoney"
-        android:id="@+id/removeMoneyAction"
-        android:layout_below="@+id/changeMoneyAction"
-        android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

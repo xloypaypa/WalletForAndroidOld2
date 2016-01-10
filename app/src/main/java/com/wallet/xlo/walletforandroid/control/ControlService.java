@@ -52,6 +52,7 @@ public class ControlService extends Service implements SendAble {
 
     @Override
     public void sendMessage(String command, byte[] message) {
+        System.out.println("send " + command + " " + new String(message));
         netWorkBinder.sendMessage(command, message);
     }
 

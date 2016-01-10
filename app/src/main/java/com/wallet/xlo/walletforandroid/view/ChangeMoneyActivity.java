@@ -27,12 +27,26 @@ public class ChangeMoneyActivity extends AbstractActivity {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         value.setText(decimalFormat.format(intent.getDoubleExtra("value", 0)));
 
-        Button button = (Button) findViewById(R.id.changeMoneyAction);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button changeMoney = (Button) findViewById(R.id.changeMoneyAction);
+        changeMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     controlBind.getProtocolSender().renameMoney(oldName, typename.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    finish();
+                }
+            }
+        });
+
+        Button removeMoney = (Button) findViewById(R.id.removeMoneyAction);
+        removeMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    controlBind.getProtocolSender().removeMoney(oldName);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } finally {

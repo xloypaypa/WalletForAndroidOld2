@@ -32,7 +32,9 @@
         <activity android:name=".view.RegisterActivity" />
         <activity android:name=".view.MainActivity" />
         <activity android:name=".view.AddMoneyActivity" />
-        <activity android:name=".view.ChangeMoneyActivity"></activity>
+        <activity android:name=".view.ChangeMoneyActivity" />
+        <activity android:name=".view.AddBudgetActivity" />
+        <activity android:name=".view.ChangeBudgetActivity"></activity>
     </application>
 
 </manifest>

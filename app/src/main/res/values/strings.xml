@@ -27,4 +27,8 @@
     <string name="addMoney">add money</string>
     <string name="useMoney">use money</string>
     <string name="changeMoney">change money</string>
+    <string name="removeMoney">remove money</string>
+    <string name="addBudget">add budget</string>
+    <string name="changeBudget">change budget</string>
+    <string name="removeBudget">remove budget</string>
 </resources>

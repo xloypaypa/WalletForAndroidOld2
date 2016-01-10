@@ -5,7 +5,9 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
+        android:id="@+id/scrollView"
+        android:layout_above="@+id/budgetAddBudget"
+        android:layout_alignParentTop="true">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
@@ -67,4 +69,12 @@
             </TableLayout>
         </HorizontalScrollView>
     </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add budget"
+        android:id="@+id/budgetAddBudget"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
