@@ -96,7 +96,6 @@ public class ControlService extends Service implements SendAble {
         }
 
         public void setNowPage(AbstractActivity activity) {
-            System.out.println("change");
             ControlService.activity = activity;
         }
 

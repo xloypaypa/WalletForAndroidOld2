@@ -121,7 +121,6 @@ public class MainActivity extends AbstractActivity {
             public void handleMessage(Message msg) {
                 Bundle data = msg.getData();
                 int size = data.getInt("size");
-                System.out.println(size);
                 detailTable.removeViews(1, detailTable.getChildCount() - 1);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                 for (int i = 0; i < size; i++) {
@@ -181,7 +180,6 @@ public class MainActivity extends AbstractActivity {
             public void handleMessage(Message msg) {
                 Bundle data = msg.getData();
                 int size = data.getInt("size");
-                System.out.println(size);
                 budgetTable.removeViews(1, budgetTable.getChildCount() - 1);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
@@ -252,7 +250,6 @@ public class MainActivity extends AbstractActivity {
             public void handleMessage(Message msg) {
                 Bundle data = msg.getData();
                 int size = data.getInt("size");
-                System.out.println(size);
                 moneyTable.removeViews(1, moneyTable.getChildCount() - 1);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 for (int i = 0; i < size; i++) {
