@@ -41,4 +41,7 @@
     <string name="script">script</string>
     <string name="removeEdge">remove edge</string>
     <string name="changeEdge">change edge</string>
+    <string name="moneyType">money type</string>
+    <string name="budgetType">budge type</string>
+    <string name="useType">use type</string>
 </resources>

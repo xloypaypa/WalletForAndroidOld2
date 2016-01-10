@@ -81,6 +81,15 @@ public class MainActivity extends AbstractActivity {
             }
         });
 
+        Button useMoney = (Button) moneyPage.findViewById(R.id.moneyUseMoney);
+        useMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UseMoneyActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button addBudget = (Button) budgetPage.findViewById(R.id.budgetAddBudget);
         addBudget.setOnClickListener(new View.OnClickListener() {
             @Override
