@@ -151,8 +151,21 @@ public class MainActivity extends AbstractActivity {
                             moneyTable, false);
                     TextView money = (TextView) tableRow.findViewById(R.id.money_row_money);
                     TextView value = (TextView) tableRow.findViewById(R.id.money_row_value);
-                    money.setText(data.getString("money" + i));
-                    value.setText(decimalFormat.format(data.getDouble("value" + i)));
+                    final String typename = data.getString("money" + i);
+                    final double moneyValue = data.getDouble("value" + i);
+                    money.setText(typename);
+                    value.setText(decimalFormat.format(moneyValue));
+
+                    tableRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, ChangeMoneyActivity.class);
+                            intent.putExtra("typename", typename);
+                            intent.putExtra("value", moneyValue);
+                            startActivity(intent);
+                        }
+                    });
+
                     moneyTable.addView(tableRow);
                 }
             }
