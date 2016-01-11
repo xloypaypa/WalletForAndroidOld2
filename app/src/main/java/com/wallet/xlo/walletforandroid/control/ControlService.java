@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 
+import com.wallet.xlo.walletforandroid.model.config.EncryptionConfig;
+import com.wallet.xlo.walletforandroid.model.tool.RSA;
 import com.wallet.xlo.walletforandroid.view.AbstractActivity;
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.model.config.ProtocolConfig;
@@ -155,7 +157,15 @@ public class ControlService extends Service implements SendAble {
             netWorkBinder.setGetCallBack(new GetAble.CallBack() {
                 @Override
                 public void action(byte[] message) {
-                    solveMessage(message);
+                    if (Client.getClient().isEncryption()) {
+                        try {
+                            solveMessage(RSA.decrypt(EncryptionConfig.getEncryptionConfig().getKeyPair().getPrivate(), message));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        solveMessage(message);
+                    }
                 }
             });
             new SessionLogic(ControlService.this).initSession();

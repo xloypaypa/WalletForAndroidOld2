@@ -12,11 +12,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NetWorkService extends Service implements DisConnectAble {
-    private NetWorkReadThread netWorkReadThread;
-    private NetWorkWriteThread netWorkWriteThread;
-    private Set<WhenDisconnectAction> whenDisconnectActions;
+    private volatile NetWorkReadThread netWorkReadThread;
+    private volatile NetWorkWriteThread netWorkWriteThread;
+    private volatile Set<WhenDisconnectAction> whenDisconnectActions;
     private volatile boolean isConnect;
-    private Socket socket;
+    private volatile Socket socket;
 
     public NetWorkService() {
     }

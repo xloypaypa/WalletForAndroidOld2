@@ -1,8 +1,17 @@
 package com.wallet.xlo.walletforandroid.model.tool;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+
 import javax.crypto.Cipher;
-import java.io.*;
-import java.security.*;
 
 
 public class RSA {
@@ -11,7 +20,8 @@ public class RSA {
 
     public static KeyPair buildKeyPair() throws Exception {
         try {
-            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
+                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
             keyPairGen.initialize(keySize, new SecureRandom());
             return keyPairGen.generateKeyPair();
         } catch (Exception e) {
@@ -21,7 +31,8 @@ public class RSA {
 
     public static byte[] encrypt(PublicKey pk, byte[] data) throws Exception {
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance("RSA",
+                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
             cipher.init(Cipher.ENCRYPT_MODE, pk);
             int blockSize = cipher.getBlockSize();
             int outputSize = cipher.getOutputSize(data.length);
@@ -47,7 +58,8 @@ public class RSA {
 
     public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance("RSA",
+                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
             cipher.init(Cipher.DECRYPT_MODE, pk);
             int blockSize = cipher.getBlockSize();
             ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
@@ -112,3 +124,4 @@ public class RSA {
         return publicKey;
     }
 }
+

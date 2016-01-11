@@ -1,5 +1,8 @@
 package com.wallet.xlo.walletforandroid.network;
 
+import com.wallet.xlo.walletforandroid.control.Client;
+import com.wallet.xlo.walletforandroid.model.tool.RSA;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -30,11 +33,13 @@ public class NetWorkWriteThread extends Thread implements SendAble, DisConnectAb
                 Thread.sleep(Long.MAX_VALUE);
             } catch (InterruptedException e) {
                 if (this.queue.isEmpty()) {
+                    System.out.println("write error");
                     break;
                 }
                 try {
                     sendMessage();
                 } catch (IOException e1) {
+                    e1.printStackTrace();
                     break;
                 }
             }
@@ -70,12 +75,23 @@ public class NetWorkWriteThread extends Thread implements SendAble, DisConnectAb
     }
 
     private byte[] buildPackage(String command, byte[] message) {
-        command = command + "#";
-        int length = command.getBytes().length + message.length;
-        String headAndCommand = length + "x" + command;
-        byte[] all = new byte[headAndCommand.getBytes().length + message.length];
-        System.arraycopy(headAndCommand.getBytes(), 0, all, 0, headAndCommand.getBytes().length);
-        System.arraycopy(message, 0, all, headAndCommand.getBytes().length, message.length);
+        command += "#";
+        byte[] pg = new byte[command.getBytes().length + message.length];
+        System.arraycopy(command.getBytes(), 0, pg, 0, command.getBytes().length);
+        System.arraycopy(message, 0, pg, command.getBytes().length, message.length);
+        if (Client.getClient().isEncryption()) {
+            try {
+                pg = RSA.encrypt(Client.getClient().getServerKey(), pg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        int length = pg.length;
+        String head = length + "x";
+        byte[] all = new byte[head.getBytes().length + pg.length];
+        System.arraycopy(head.getBytes(), 0, all, 0, head.getBytes().length);
+        System.arraycopy(pg, 0, all, head.getBytes().length, pg.length);
         return all;
     }
 

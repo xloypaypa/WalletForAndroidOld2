@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class NetWorkReadThread extends Thread implements GetAble, DisConnectAble {
 
+    private Socket socket;
     private int status, len;
     private InputStream inputStream;
     private List<Byte> body, head;
@@ -20,6 +21,7 @@ public class NetWorkReadThread extends Thread implements GetAble, DisConnectAble
     private CallBack callBack;
 
     public NetWorkReadThread(Socket socket, NetWorkService netWorkService) throws IOException {
+        this.socket = socket;
         this.inputStream = socket.getInputStream();
         this.head = new LinkedList<>();
         this.body = new LinkedList<>();
@@ -32,20 +34,18 @@ public class NetWorkReadThread extends Thread implements GetAble, DisConnectAble
         while (true) {
             try {
                 byte now = (byte) this.inputStream.read();
-                if (now == -1) {
-                    break;
-                }
                 nextByte(now);
             } catch (SocketTimeoutException ignored) {
 
             } catch (IOException e) {
+                e.printStackTrace();
                 break;
             }
         }
         this.netWorkService.disConnect();
     }
 
-    private void nextByte(byte now) {
+    private void nextByte(byte now) throws IOException {
         if (this.status == 0) {
             if (now == 'x') {
                 byte[] ans = new byte[this.head.size()];
@@ -56,6 +56,10 @@ public class NetWorkReadThread extends Thread implements GetAble, DisConnectAble
                 this.status = 1;
             } else {
                 this.head.add(now);
+                if (this.head.size() > 100) {
+                    this.head.clear();
+                    throw new IOException("package error");
+                }
             }
         } else {
             this.body.add(now);

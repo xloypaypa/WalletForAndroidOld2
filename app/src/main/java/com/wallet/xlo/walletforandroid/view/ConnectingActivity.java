@@ -1,9 +1,11 @@
 package com.wallet.xlo.walletforandroid.view;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -52,7 +54,16 @@ public class ConnectingActivity extends AbstractActivity {
         super.onResume();
         boolean flag = getIntent().getBooleanExtra("flag", false);
         if (flag) {
-            DialogBuilder.showMessageDialog("error", "can't connect server", this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("can't connect server");
+            builder.setTitle("error");
+            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    System.exit(0);
+                }
+            });
+            builder.create().show();
         }
     }
 }
