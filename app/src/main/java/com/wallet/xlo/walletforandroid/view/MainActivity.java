@@ -115,6 +115,14 @@ public class MainActivity extends AbstractActivity {
                 startActivity(intent);
             }
         });
+
+        Button clear = (Button) budgetPage.findViewById(R.id.settlementAccounts);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controlBind.getProtocolSender().clear();
+            }
+        });
     }
 
     protected void buildServiceConnection() {

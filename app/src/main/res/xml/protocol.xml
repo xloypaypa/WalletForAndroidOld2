@@ -70,6 +70,11 @@
             <data>result</data>
         </method>
     </solver>
+    <solver name="clear" url="/clear" manager="control.BudgetLogic">
+        <method name="updateBudget">
+            <data>result</data>
+        </method>
+    </solver>
 
     <solver name="add edge" url="/addEdge" manager="com.wallet.xlo.walletforandroid.control.EdgeLogic">
         <method name="updateEdge">

@@ -173,4 +173,8 @@ public abstract class ProtocolSender {
         controlService.sendMessage("/rollBack", new JSONObject().toString().getBytes());
     }
 
+    public void clear() {
+        controlService.sendMessage("/clear", "{}".getBytes());
+    }
+
 }

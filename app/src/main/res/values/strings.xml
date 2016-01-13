@@ -44,4 +44,5 @@
     <string name="moneyType">money type</string>
     <string name="budgetType">budge type</string>
     <string name="useType">use type</string>
+    <string name="settlementAccounts">settlement accounts</string>
 </resources>
