@@ -45,4 +45,5 @@
     <string name="budgetType">budge type</string>
     <string name="useType">use type</string>
     <string name="settlementAccounts">settlement accounts</string>
+    <string name="transfer">transfer</string>
 </resources>

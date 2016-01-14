@@ -57,6 +57,13 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/transfer"
+            android:id="@+id/moneyTransfer"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/useMoney"
             android:id="@+id/moneyUseMoney"
             android:layout_gravity="center_horizontal" />
