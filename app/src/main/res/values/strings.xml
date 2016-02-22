@@ -46,4 +46,12 @@
     <string name="useType">use type</string>
     <string name="settlementAccounts">settlement accounts</string>
     <string name="transfer">transfer</string>
+    <string name="creditor">creditor</string>
+    <string name="deadline">deadline</string>
+    <string name="inOrOut">in or out</string>
+    <string name="loanOut">loan out</string>
+    <string name="loanIn">loan in</string>
+    <string name="addLoan">add loan</string>
+    <string name="repay">repay</string>
+    <string name="removeLoan">remove loan</string>
 </resources>

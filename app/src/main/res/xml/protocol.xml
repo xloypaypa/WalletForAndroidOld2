@@ -132,4 +132,29 @@
     <solver name="roll back" url="/rollBack" manager="com.wallet.xlo.walletforandroid.control.DetailLogic">
         <method name="rollBack"/>
     </solver>
+
+    <solver name="get loan" url="/getLoan" manager="com.wallet.xlo.walletforandroid.control.LoanLogic">
+        <method name="getLoan" type="array">
+            <data>id</data>
+            <data>creditor</data>
+            <data>value</data>
+            <data>deadline</data>
+            <data>isIn</data>
+        </method>
+    </solver>
+    <solver name="create loan" url="/createLoan" manager="com.wallet.xlo.walletforandroid.control.LoanLogic">
+        <method name="updateLoan">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="remove loan" url="/removeLoan" manager="com.wallet.xlo.walletforandroid.control.LoanLogic">
+        <method name="updateLoan">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="repay" url="/repay" manager="com.wallet.xlo.walletforandroid.control.LoanLogic">
+        <method name="updateLoan">
+            <data>result</data>
+        </method>
+    </solver>
 </command>

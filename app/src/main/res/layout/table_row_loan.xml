@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/budget_row">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/loan_row_id"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/loan_row_creditor"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/loan_row_value"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/loan_row_deadline"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/table_frame_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/loan_row_in_or_out"
+        android:layout_weight="1" />
+</TableRow>

@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.wallet.xlo.walletforandroid.R;
 import com.wallet.xlo.walletforandroid.control.ControlService;
@@ -23,50 +21,51 @@ import com.wallet.xlo.walletforandroid.model.data.AllDetailData;
 import com.wallet.xlo.walletforandroid.model.data.BudgetData;
 import com.wallet.xlo.walletforandroid.model.data.DataUpdateAction;
 import com.wallet.xlo.walletforandroid.model.data.EdgeData;
+import com.wallet.xlo.walletforandroid.model.data.LoanData;
 import com.wallet.xlo.walletforandroid.model.data.MoneyData;
 import com.wallet.xlo.walletforandroid.model.data.node.BudgetNode;
 import com.wallet.xlo.walletforandroid.model.data.node.DetailNode;
 import com.wallet.xlo.walletforandroid.model.data.node.EdgeNode;
+import com.wallet.xlo.walletforandroid.model.data.node.LoanNode;
 import com.wallet.xlo.walletforandroid.model.data.node.MoneyNode;
+import com.wallet.xlo.walletforandroid.view.handler.BudgetUpdateHandler;
+import com.wallet.xlo.walletforandroid.view.handler.DetailUpdateHandler;
+import com.wallet.xlo.walletforandroid.view.handler.EdgeUpdateHandler;
+import com.wallet.xlo.walletforandroid.view.handler.LoanUpdateHandler;
+import com.wallet.xlo.walletforandroid.view.handler.MoneyUpdateHandler;
 
 import org.json.JSONException;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AbstractActivity {
 
-    private Handler moneyUpdateHandler, budgetUpdateHandler, detailUpdateHandler, edgeUpdateHandler;
-    private TableLayout moneyTable, budgetTable, detailTable, edgeTable;
+    private Handler moneyUpdateHandler, budgetUpdateHandler, loanUpdateHandler, detailUpdateHandler, edgeUpdateHandler;
 
-    private ViewPager viewPager;
-    private View moneyPage, budgetPage, detailPage, edgePage;
-
-    private DataUpdateAction moneyUpdateAction, budgetUpdateAction, detailUpdateAction, edgeUpdateAction;
+    private DataUpdateAction moneyUpdateAction, budgetUpdateAction, loanUpdateAction, detailUpdateAction, edgeUpdateAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager = (ViewPager) findViewById(R.id.view);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view);
         List<View> listViews = new ArrayList<>();
         LayoutInflater mInflater = getLayoutInflater();
-        moneyPage = mInflater.inflate(R.layout.layout_money, null);
-        budgetPage = mInflater.inflate(R.layout.layout_budget, null);
-        detailPage = mInflater.inflate(R.layout.layout_detail, null);
-        edgePage = mInflater.inflate(R.layout.layout_edge, null);
+        View moneyPage = mInflater.inflate(R.layout.layout_money, null);
+        View budgetPage = mInflater.inflate(R.layout.layout_budget, null);
+        View edgePage = mInflater.inflate(R.layout.layout_edge, null);
+        View loanPage = mInflater.inflate(R.layout.layout_loan, null);
+        View detailPage = mInflater.inflate(R.layout.layout_detail, null);
         listViews.add(moneyPage);
         listViews.add(budgetPage);
-        listViews.add(detailPage);
         listViews.add(edgePage);
+        listViews.add(loanPage);
+        listViews.add(detailPage);
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);
 
@@ -108,6 +107,15 @@ public class MainActivity extends AbstractActivity {
             }
         });
 
+//        Button addLoan = (Button) loanPage.findViewById(R.id.mainAddLoan);
+//        addLoan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, AddBudgetActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
         Button rollBack = (Button) detailPage.findViewById(R.id.rollBackAction);
         rollBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +152,7 @@ public class MainActivity extends AbstractActivity {
                     controlBind.getProtocolSender().getMoney();
                     controlBind.getProtocolSender().getBudget();
                     controlBind.getProtocolSender().getEdge();
+                    controlBind.getProtocolSender().getLoan();
                     controlBind.getProtocolSender().getAllDetail();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -160,46 +169,36 @@ public class MainActivity extends AbstractActivity {
     private void connectToData() {
         connectToMoneyData();
         connectToBudget();
-        connectToDetail();
         connectToEdge();
+        connectToLoan();
+        connectToDetail();
+    }
+
+    private void connectToLoan() {
+        loanUpdateAction = new DataUpdateAction() {
+            @Override
+            public void action() {
+                Collection<LoanNode> loanNodes = LoanData.getLoanData().getDataCollection();
+
+                Bundle data = new Bundle();
+                data.putInt("size", loanNodes.size());
+                int pos = 0;
+                for (LoanNode now : loanNodes) {
+                    data.putString("id" + pos, now.getId());
+                    data.putString("creditor" + pos, now.getCreditor());
+                    data.putDouble("value" + pos, now.getValue());
+                    data.putLong("deadline" + pos, now.getDeadline().getTime());
+                    data.putString("isIn" + pos, now.getIsIn());
+                    pos++;
+                }
+                Message message = new Message();
+                message.setData(data);
+                loanUpdateHandler.sendMessage(message);
+            }
+        };
     }
 
     private void connectToEdge() {
-        edgeUpdateHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                int size = data.getInt("size");
-                edgeTable.removeViews(1, edgeTable.getChildCount() - 1);
-                for (int i = 0; i < size; i++) {
-                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_edge,
-                            edgeTable, false);
-                    final TextView from = (TextView) tableRow.findViewById(R.id.edge_row_from);
-                    final TextView to = (TextView) tableRow.findViewById(R.id.edge_row_to);
-
-                    final String fromString = data.getString("from" + i);
-                    final String toString = data.getString("to" + i);
-                    final String scriptString = data.getString("script" + i);
-
-                    from.setText(fromString);
-                    to.setText(toString);
-
-                    tableRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MainActivity.this, ChangeEdgeActivity.class);
-                            intent.putExtra("from", fromString);
-                            intent.putExtra("to", toString);
-                            intent.putExtra("script", scriptString);
-                            startActivity(intent);
-                        }
-                    });
-
-                    edgeTable.addView(tableRow);
-                }
-            }
-        };
-
         edgeUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
@@ -222,33 +221,6 @@ public class MainActivity extends AbstractActivity {
     }
 
     private void connectToDetail() {
-        detailUpdateHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                int size = data.getInt("size");
-                detailTable.removeViews(1, detailTable.getChildCount() - 1);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                for (int i = 0; i < size; i++) {
-                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_detail,
-                            detailTable, false);
-                    final TextView id = (TextView) tableRow.findViewById(R.id.detail_row_id);
-                    final TextView event = (TextView) tableRow.findViewById(R.id.detail_row_event);
-                    TextView date = (TextView) tableRow.findViewById(R.id.detail_row_date);
-
-                    final String idString = data.getString("id" + i);
-                    final String eventString = data.getString("event" + i);
-                    final long dateLong = data.getLong("date" + i);
-
-                    id.setText(idString);
-                    event.setText(eventString);
-                    date.setText(simpleDateFormat.format(new Date(dateLong)));
-
-                    detailTable.addView(tableRow);
-                }
-            }
-        };
-
         detailUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
@@ -281,52 +253,6 @@ public class MainActivity extends AbstractActivity {
     }
 
     private void connectToBudget() {
-        budgetUpdateHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                int size = data.getInt("size");
-                budgetTable.removeViews(1, budgetTable.getChildCount() - 1);
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                for (int i = 0; i < size; i++) {
-                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_budget,
-                            budgetTable, false);
-                    final TextView typename = (TextView) tableRow.findViewById(R.id.budget_row_typename);
-                    final TextView income = (TextView) tableRow.findViewById(R.id.budget_row_income);
-                    TextView expenditure = (TextView) tableRow.findViewById(R.id.budget_row_expenditure);
-                    TextView nowIncome = (TextView) tableRow.findViewById(R.id.budget_row_nowIncome);
-                    TextView nowExpenditure = (TextView) tableRow.findViewById(R.id.budget_row_nowExpenditure);
-
-                    final String typenameString = data.getString("typename" + i);
-                    final double incomeDouble = data.getDouble("income" + i);
-                    final double expenditureDouble = data.getDouble("expenditure" + i);
-                    final double nowIncomeDouble = data.getDouble("now income" + i);
-                    final double nowExpenditureDouble = data.getDouble("now expenditure" + i);
-
-                    typename.setText(typenameString);
-                    income.setText(decimalFormat.format(incomeDouble));
-                    expenditure.setText(decimalFormat.format(expenditureDouble));
-                    nowIncome.setText(decimalFormat.format(nowIncomeDouble));
-                    nowExpenditure.setText(decimalFormat.format(nowExpenditureDouble));
-
-                    tableRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MainActivity.this, ChangeBudgetActivity.class);
-                            intent.putExtra("typename", typenameString);
-                            intent.putExtra("income", incomeDouble);
-                            intent.putExtra("expenditure", expenditureDouble);
-                            intent.putExtra("now income", nowIncomeDouble);
-                            intent.putExtra("now expenditure", nowExpenditureDouble);
-                            startActivity(intent);
-                        }
-                    });
-
-                    budgetTable.addView(tableRow);
-                }
-            }
-        };
-
         budgetUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
@@ -351,38 +277,6 @@ public class MainActivity extends AbstractActivity {
     }
 
     private void connectToMoneyData() {
-        moneyUpdateHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                int size = data.getInt("size");
-                moneyTable.removeViews(1, moneyTable.getChildCount() - 1);
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                for (int i = 0; i < size; i++) {
-                    TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_money,
-                            moneyTable, false);
-                    TextView money = (TextView) tableRow.findViewById(R.id.money_row_money);
-                    TextView value = (TextView) tableRow.findViewById(R.id.money_row_value);
-                    final String typename = data.getString("money" + i);
-                    final double moneyValue = data.getDouble("value" + i);
-                    money.setText(typename);
-                    value.setText(decimalFormat.format(moneyValue));
-
-                    tableRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MainActivity.this, ChangeMoneyActivity.class);
-                            intent.putExtra("typename", typename);
-                            intent.putExtra("value", moneyValue);
-                            startActivity(intent);
-                        }
-                    });
-
-                    moneyTable.addView(tableRow);
-                }
-            }
-        };
-
         moneyUpdateAction = new DataUpdateAction() {
             @Override
             public void action() {
@@ -423,30 +317,41 @@ public class MainActivity extends AbstractActivity {
             } else if (position == 1) {
                 BudgetData.getBudgetData().removeAction(budgetUpdateAction);
             } else if (position == 2) {
-                AllDetailData.getAllDetailData().removeAction(detailUpdateAction);
-            } else if (position == 3) {
                 EdgeData.getEdgeData().removeAction(edgeUpdateAction);
+            } else if (position == 3) {
+                LoanData.getLoanData().removeAction(loanUpdateAction);
+            } else if (position == 4) {
+                AllDetailData.getAllDetailData().removeAction(detailUpdateAction);
             }
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             if (position == 0) {
-                moneyTable = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
+                TableLayout moneyTable = (TableLayout) mListViews.get(0).findViewById(R.id.moneyTable);
                 MoneyData.getMoneyData().registerAction(moneyUpdateAction);
+                moneyUpdateHandler = new MoneyUpdateHandler(MainActivity.this, moneyTable);
                 moneyUpdateAction.action();
             } else if (position == 1) {
-                budgetTable = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
+                TableLayout budgetTable = (TableLayout) mListViews.get(1).findViewById(R.id.budgetTable);
                 BudgetData.getBudgetData().registerAction(budgetUpdateAction);
+                budgetUpdateHandler = new BudgetUpdateHandler(MainActivity.this, budgetTable);
                 budgetUpdateAction.action();
             } else if (position == 2) {
-                detailTable = (TableLayout) mListViews.get(2).findViewById(R.id.detailTable);
-                AllDetailData.getAllDetailData().registerAction(detailUpdateAction);
-                detailUpdateAction.action();
-            } else if (position == 3) {
-                edgeTable = (TableLayout) mListViews.get(3).findViewById(R.id.edgeTable);
+                TableLayout edgeTable = (TableLayout) mListViews.get(2).findViewById(R.id.edgeTable);
                 EdgeData.getEdgeData().registerAction(edgeUpdateAction);
+                edgeUpdateHandler = new EdgeUpdateHandler(MainActivity.this, edgeTable);
                 edgeUpdateAction.action();
+            } else if (position == 3) {
+                TableLayout loanTable = (TableLayout) mListViews.get(3).findViewById(R.id.loanTable);
+                LoanData.getLoanData().registerAction(loanUpdateAction);
+                loanUpdateHandler = new LoanUpdateHandler(MainActivity.this, loanTable);
+                loanUpdateAction.action();
+            } else if (position == 4) {
+                TableLayout detailTable = (TableLayout) mListViews.get(4).findViewById(R.id.detailTable);
+                AllDetailData.getAllDetailData().registerAction(detailUpdateAction);
+                detailUpdateHandler = new DetailUpdateHandler(MainActivity.this, detailTable);
+                detailUpdateAction.action();
             }
             container.addView(mListViews.get(position), 0);
             return mListViews.get(position);

@@ -46,6 +46,10 @@ public abstract class ProtocolSender {
         controlService.sendMessage("/getEdgeList", "{}".getBytes());
     }
 
+    public void getLoan() {
+        controlService.sendMessage("/getLoan", "{}".getBytes());
+    }
+
     public void createMoney(String typename, String value) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("typename", typename);
@@ -175,6 +179,30 @@ public abstract class ProtocolSender {
 
     public void clear() {
         controlService.sendMessage("/clear", "{}".getBytes());
+    }
+
+    public void createLoan(String creditor, String moneyType, String value, String deadline, String isIn) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("creditor", creditor);
+        jsonObject.put("moneyType", moneyType);
+        jsonObject.put("value", value);
+        jsonObject.put("deadline", deadline);
+        jsonObject.put("isIn", isIn);
+        controlService.sendMessage("/createLoan", jsonObject.toString().getBytes());
+    }
+
+    public void repay(String id, String moneyType, String value) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("moneyType", moneyType);
+        jsonObject.put("value", value);
+        controlService.sendMessage("/repay", jsonObject.toString().getBytes());
+    }
+
+    public void removeLoan(String id) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        controlService.sendMessage("/removeLoan", jsonObject.toString().getBytes());
     }
 
 }
