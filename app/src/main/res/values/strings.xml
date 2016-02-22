@@ -54,4 +54,7 @@
     <string name="addLoan">add loan</string>
     <string name="repay">repay</string>
     <string name="removeLoan">remove loan</string>
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="day">day</string>
 </resources>

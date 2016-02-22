@@ -26,8 +26,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button4"
+        android:text="@string/removeLoan"
+        android:id="@+id/removeLoan"
         android:layout_below="@+id/tableLayout14"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

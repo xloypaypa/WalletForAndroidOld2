@@ -21,7 +21,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/creditor" />
+                android:id="@+id/creditor"
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow
@@ -36,7 +37,8 @@
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/moneyType" />
+                android:id="@+id/moneyType"
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow
@@ -53,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
-                android:id="@+id/value" />
+                android:id="@+id/value"
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow
@@ -65,12 +68,55 @@
                 android:layout_height="wrap_content"
                 android:text="@string/deadline" />
 
-            <EditText
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/deadline" />
+                android:layout_weight="1">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/deadlineYear"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/year" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:ems="10"
+                    android:id="@+id/deadlineMonth"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/month" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:ems="10"
+                    android:id="@+id/deadlineDay"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/day" />
+            </LinearLayout>
+
         </TableRow>
 
         <TableRow
@@ -82,10 +128,11 @@
                 android:layout_height="match_parent"
                 android:text="@string/inOrOut" />
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -100,7 +147,7 @@
                     android:text="@string/loanOut"
                     android:id="@+id/loanOut"
                     android:checked="true" />
-            </LinearLayout>
+            </RadioGroup>
         </TableRow>
 
     </TableLayout>

@@ -33,6 +33,7 @@ import com.wallet.xlo.walletforandroid.view.handler.DetailUpdateHandler;
 import com.wallet.xlo.walletforandroid.view.handler.EdgeUpdateHandler;
 import com.wallet.xlo.walletforandroid.view.handler.LoanUpdateHandler;
 import com.wallet.xlo.walletforandroid.view.handler.MoneyUpdateHandler;
+import com.wallet.xlo.walletforandroid.view.handler.RepayLoanActivity;
 
 import org.json.JSONException;
 
@@ -107,14 +108,32 @@ public class MainActivity extends AbstractActivity {
             }
         });
 
-//        Button addLoan = (Button) loanPage.findViewById(R.id.mainAddLoan);
-//        addLoan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, AddBudgetActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        Button addLoan = (Button) loanPage.findViewById(R.id.mainAddLoan);
+        addLoan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddLoanActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button repayLoan = (Button) loanPage.findViewById(R.id.mainRepay);
+        repayLoan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RepayLoanActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button removeLoan = (Button) loanPage.findViewById(R.id.mainRemoveLoan);
+        removeLoan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RemoveLoanActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Button rollBack = (Button) detailPage.findViewById(R.id.rollBackAction);
         rollBack.setOnClickListener(new View.OnClickListener() {

@@ -37,7 +37,10 @@
         <activity android:name=".view.AddEdgeActivity" />
         <activity android:name=".view.ChangeEdgeActivity" />
         <activity android:name=".view.UseMoneyActivity" />
-        <activity android:name=".view.TransferActivity"></activity>
+        <activity android:name=".view.TransferActivity"/>
+        <activity android:name=".view.AddLoanActivity"/>
+        <activity android:name=".view.handler.RepayLoanActivity"/>
+        <activity android:name=".view.RemoveLoanActivity"/>
     </application>
 
 </manifest>
