@@ -20,6 +20,12 @@ public abstract class ProtocolSender {
         this.controlService = controlService;
     }
 
+    public void useApp() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("appName", "wallet");
+        controlService.sendMessage("/useApp", jsonObject.toString().getBytes());
+    }
+
     public void login(String username, String password) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);

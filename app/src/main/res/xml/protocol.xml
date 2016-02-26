@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <command>
-    <solver name="session" url="/session" manager="com.wallet.xlo.walletforandroid.control.SessionLogic">
+    <solver name="session" url="/loginApp" manager="com.wallet.xlo.walletforandroid.control.UserLogic">
+        <method name="loginApp">
+            <data>result</data>
+        </method>
+    </solver>
+    <solver name="session" url="/useApp" manager="com.wallet.xlo.walletforandroid.control.UserLogic">
+        <method name="useApp">
+            <data>result</data>
+        </method>
+    </solver>
+
+    <solver name="session" url="/getSessionID" manager="com.wallet.xlo.walletforandroid.control.SessionLogic">
         <method name="getSessionID">
             <data>result</data>
         </method>

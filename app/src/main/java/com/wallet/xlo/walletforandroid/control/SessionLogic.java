@@ -34,7 +34,7 @@ public class SessionLogic extends ProtocolSender {
     }
 
     public void getSessionID() {
-        this.controlService.sendMessage("/session", "{}".getBytes());
+        this.controlService.sendMessage("/getSessionID", "{}".getBytes());
     }
 
     public void initSession() {
